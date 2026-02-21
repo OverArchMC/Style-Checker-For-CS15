@@ -1,6 +1,3 @@
-#include <fstream>
-#include <iostream>
-#include <string>
 #include "StyleChecker.h"
 
 using namespace std;

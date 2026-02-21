@@ -1,7 +1,14 @@
-#include <fstream>
+
+#ifndef __STYLE_CHECKER_H_
+#define __STYLE_CHECKER_H_
+
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
+#include <set>
+#include <regex>
+
 #include "Function.h"
 
 class StyleChecker{
@@ -9,15 +16,18 @@ public:
     StyleChecker(std::ifstream &input);
     void printLines();
     void parseFunctions();
+    bool isFunctionStart(const std::string& line);
+    void readLines(std::ifstream &input);
+    std::vector<std::string> splitStringIntoWords(const std::string& input);
     
 private:
     std::vector<std::string> lines;
     std::vector<Function> functions;
 
-    void readLines(std::ifstream &input);
-    void check_every_line();
-    bool function_length();
-    bool line_length();
+    // void readLines(std::ifstream &input);
+    // void check_every_line();
+    // bool function_length();
+    // bool line_length();
 
     // CHECK ONCE FOR EVERY LINE 
     // 80 characters 
@@ -41,3 +51,5 @@ private:
 
     // no repetitive code...
 };
+
+#endif
