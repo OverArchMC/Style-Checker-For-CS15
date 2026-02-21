@@ -17,6 +17,7 @@ private:
 
     void readLines(std::ifstream &input, std::ofstream &output);
     void lineLength();
+    void oncePerFile();
     
 
     // CHECK ONCE FOR EVERY LINE 
@@ -30,14 +31,14 @@ private:
     // no break (done)
 
     // CHECK ONCE PER FILE 
-    // function contracts 
-    // headers 
-    // no global variables
-    // data members in classes should be delcared private
-    // no std namespace in .h file 
+    // headers (joey)
+    // not global variable (done? need to test)
+    // data members in classes should be declared private (sylvia)
+    // no std namespace in .h file (done)
 
-    // CHECK ONCE PER FUNCTION 
-    // 30 lines (kyra)
+    // CHECK ONCE PER FUNCTION (kyra)
+    // 30 lines 
+    // function contracts 
 
     // no repetitive code...
 };

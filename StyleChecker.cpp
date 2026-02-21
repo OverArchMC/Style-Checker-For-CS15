@@ -6,6 +6,7 @@
 StyleChecker::StyleChecker(std::ifstream &input, std::ofstream &output) {
    readLines(input, output);
    lineLength();
+   oncePerFile();
    printLines(output);
 }
 
@@ -51,23 +52,25 @@ void StyleChecker::printLines(std::ofstream &output) {
 // }
 
 void StyleChecker::lineLength() {
-    
-    int indent_level = 0; // for indentation check 
+    int indent_level = 0;
 
     for (size_t i = 0; i < lines.size(); i++){
-        // Skip comment lines
-        if(lines.at(i).find("//") != std::string::npos && lines.at(i).find("//") == lines.at(i).find_first_not_of(" \t")){
+        const std::string original = lines[i]; // keep unmodified line for checks
+
+        // Skip comment lines (use original)
+        if (original.find("//") != std::string::npos &&
+            original.find("//") == original.find_first_not_of(" \t")) {
             continue;
         }
-        
+
         // check for 80 characters 
-        if(lines.at(i).length() > 80){ 
-            std::string comment = " // Exceeds 80-char line limit; length: " + std::to_string(lines[i].length());
+        if (original.length() > 80){ 
+            std::string comment = " // Exceeds 80-char line limit; length: " + std::to_string(original.length());
             lines[i] += comment;
         }
 
         // can't write loops dependent on true/false
-        if(lines.at(i).find("while (true)") != std::string::npos or lines.at(i).find("while (false)") != std::string::npos){
+        if(original.find("while (true)") != std::string::npos || original.find("while (false)") != std::string::npos){
             std::string error = " // Loops must be dependent on a condition";
             lines[i] += error;
         }
@@ -75,19 +78,19 @@ void StyleChecker::lineLength() {
         // check for || && ! and check for tab pt 1 and check for + - = spacing
         bool indentDone = false; // for checking tab
         bool skip = false; // for checking !
-        for (size_t j = 0; j < lines.at(i).length(); j++){
-            if (lines.at(i)[j] == '|' and lines.at(i)[j] == '|') {
+        for (size_t j = 0; j < original.length(); j++){
+            if (original.at(j) == '|' and original.at(j) == '|') {
                 std::string comment = " // Use \"or\" instead of \"||\" ";
                 lines[i] += comment;
                 break;
             }
-            if (lines.at(i)[j] == '&' and lines.at(i)[j] == '&') {
+            if (original.at(j) == '&' and original.at(j) == '&') {
                 std::string comment = " // Use \"and\" instead of \"&&\" ";
                 lines[i] += comment;
                 break;
             }
-            if (lines.at(i)[j] == '!' and lines.at(i)[j+1] == '=') skip == true;
-            else if (lines.at(i)[j] == '!' and lines.at(i)[j] != '=' and !(skip)) {
+            if (original.at(j) == '!' and original.at(j+1) == '=') skip == true;
+            else if (original.at(j) == '!' and original.at(j) != '=' and !(skip)) {
                 std::string comment = " // Use \"not\" instead of \"!\" ";
                 lines[i] += comment;
                 skip == false;
@@ -95,72 +98,71 @@ void StyleChecker::lineLength() {
             }
 
             // checking for + - * == spacing 
-            if (lines.at(i)[j] == '+' || lines.at(i)[j] == '*' || lines.at(i)[j] == '/' || lines.at(i)[j] == '%') {
-                if (lines.at(i)[j-1] != ' ' || lines.at(i)[j+1] != ' ') {
-                    lines[i] += " // Add space between and after binary operator";
+            if (original.at(j) == '+' || original.at(j) == '*' || original.at(j) == '/' || original.at(j) == '%') {
+                if (original.at(j-1) != ' ' || original.at(j+1) != ' ') {
+                    lines[i] += " // Add space before and after binary operator";
                     break;
                 }
             }
-            if (lines.at(i)[j] == '-' && lines.at(i)[j+1] != '>') {
-                if (lines.at(i)[j-1] != ' ' || lines.at(i)[j+1] != ' ') {
-                    lines[i] += " // Add space between and after binary operator"; 
+            if (original.at(j) == '-' && original.at(j+1) != '>') {
+                if (original.at(j-1) != ' ' || original.at(j+1) != ' ') {
+                    lines[i] += " // Add space before and after binary operator"; 
                     break;
                 }
             }
-            if (lines.at(i)[j] == '=' && lines.at(i)[j+1] != '=' && lines.at(i)[j-1] != '=') {
-                if (lines.at(i)[j-1] != ' ' || lines.at(i)[j+1] != ' ') {
-                    lines[i] += " // Add space between and after binary operator"; 
+            if (original.at(j) == '=' && original.at(j+1) != '=' && original.at(j-1) != '=') {
+                if (original.at(j-1) != ' ' || original.at(j+1) != ' ') {
+                    lines[i] += " // Add space before and after binary operator"; 
                     break;
                 }
             }
         }
-
+       
         // check for break;
-        if(lines.at(i).find("break;" ) != std::string::npos){
+        if(original.find("break;" ) != std::string::npos){
             std::string info = " // No break statements allowed";
             lines[i] += info;
         }
 
         // space_between_arguments_and_brackets
-        if(lines.at(i).find("for(") != std::string::npos) {
+        if(original.find("for(") != std::string::npos) {
             std::string comment = " // Add a space between the for loop arguments and the brackets";
             lines[i] += comment; 
         }
-        if(lines.at(i).find("if(") != std::string::npos) {
+        if(original.find("if(") != std::string::npos) {
             std::string comment = " // Add a space between the if statement arguments and the brackets";
             lines[i] += comment; 
         }
-        if(lines.at(i).find("while(") != std::string::npos) {
+        if(original.find("while(") != std::string::npos) {
             std::string comment = " // Add a space between the while loop arguments and the brackets";
             lines[i] += comment; 
         }
 
-        if(lines.at(i).find("for") != std::string::npos && lines.at(i).find(") {") != std::string::npos){
+        if(original.find("for") != std::string::npos && original.find(") {") != std::string::npos){
             std::string comment = " // Add a space between the for loop arguments and the brackets";
             lines[i] += comment; 
         }
-        if(lines.at(i).find("if") != std::string::npos) {
+        if(original.find("if") != std::string::npos && original.find(") {") != std::string::npos) {
             std::string comment = " // Add a space between the if statement arguments and the brackets";
             lines[i] += comment; 
         }
-        if(lines.at(i).find("while") != std::string::npos) {
+        if(original.find("while") != std::string::npos && original.find(") {") != std::string::npos) {
             std::string comment = " // Add a space between the while loop arguments and the brackets";
             lines[i] += comment; 
         }
 
 
         // indentation 
-        
         int leading_spaces = 0;
-        for(size_t j = 0; j < lines.at(i).length(); j++){
-            if(lines.at(i)[j] == ' '){
+        for(size_t j = 0; j < original.length(); j++){
+            if(original.at(j) == ' '){
                 leading_spaces++;
             } else {
                 break;
             }
         }
         
-        if(lines.at(i).find('}') != std::string::npos){
+        if(original.find('}') != std::string::npos){
             indent_level--;
         }
         
@@ -170,30 +172,92 @@ void StyleChecker::lineLength() {
             lines[i] += comment;
         }
         
-        if(lines.at(i).find('{') != std::string::npos){
+        if(original.find('{') != std::string::npos){
             indent_level++;
         }
 
         // no single line loops 
-        if(lines.at(i).find("for") != std::string::npos || lines.at(i).find("while") != std::string::npos || lines.at(i).find("if") != std::string::npos){
-            if(lines.at(i).find(";") != std::string::npos){
+        if(original.find("for") != std::string::npos || original.find("while") != std::string::npos || original.find("if") != std::string::npos){
+            if(original.find(";") != std::string::npos){
                 std::string comment = " // No single line loops or if statements.";
                 lines[i] += comment;
             }
         }
 
-        // check operator spacing
-        for(size_t j = 0; j < lines.at(i).length(); j++) {
-            if (lines.at(i).at(j) == '+' || lines.at(i).at(j) == '-' || lines.at(i).at(j) == '*' || lines.at(i).at(j) == '/' || lines.at(i).at(j) == '>' || lines.at(i).at(j) == '<'){
-                if (j > 0 && j < lines.at(i).length() - 1) {
-                    if (lines.at(i).at(j-1) != ' ' || lines.at(i).at(j+1) != ' ') {
-                        std::string comment = " // Add spaces around operators.";
-                        lines[i] += comment;
-                        break;
-                    }
-                }
+        // check operator spacing (this is repeat code)
+        // for (size_t j = 0; j < original.length(); j++) {
+        //     if (original.at(j) == '+' || original.at(j) == '-' || original.at(j) == '*' ||
+        //         original.at(j) == '/' || original.at(j) == '>' || original.at(j) == '<') {
+        //         if (j > 0 && j < original.length() - 1) {
+        //             if (original.at(j-1) != ' ' || original.at(j+1) != ' ') {
+        //                 std::string comment = " // Add spaces around operators";
+        //                 lines[i] += comment;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        // }
+    }
+    
+}
+
+void StyleChecker::oncePerFile(){
+    // these variables are for standard namespace 
+    bool have_namespace = false; 
+    bool have_main = false; 
+    int namespaceLineNum; 
+
+    // these variables are for members declared private 
+    bool headerFile = false;
+    bool reachedPrivate = false;
+
+    int braces = 0;
+    for (size_t i = 0; i < lines.size(); i++) {
+
+        // check for members declared private 
+        if (lines.at(i).find("class ") != std::string::npos) headerFile = true;
+        //if (lines.at(i).find("private:") != std::string::npos) reachedPrivate = true;
+        // I DON'T KNOW HOW TO CHECK IF SOMETHING IS A FUNCTION OR A VARIABLE - like what if it's a struct type 
+        
+        // check for standard namespace pt 1
+        if (lines.at(i).find("using namespace std;") != std::string::npos) {
+            have_namespace = true;
+            namespaceLineNum = i + 1;
+        }
+        if (lines.at(i).find("int main") != std::string::npos) have_main = true;
+
+        //check for globals
+        for(int j = 0; j < lines.at(i).length(); j++){
+            if(lines.at(i)[j] == '{') braces++;
+            if(lines.at(i)[j] == '}') braces--;
+            //checking to see if we're in a function or not...
+        }
+        if(braces == 0){
+            headerFile = false;
+            reachedPrivate = false;
+            if(lines.at(i).find(";") != std::string::npos && lines.at(i).find("const") == std::string::npos){
+                std::string error = " Not allowed a global variable.";
+                lines[i] += error;
+                //if not a global const nothing can be put outside the functions
+            }
+        }
+        if(headerFile){
+            if (lines.at(i).find("private:") != std::string::npos) reachedPrivate = true;
+            else if(lines.at(i).find("public:")!= std::string::npos){
+                reachedPrivate = false;
+            }
+        }
+        // check for file header
+        if(i == 0){
+            if(lines.at(i).find("/*") == std::string::npos || lines.at(i).find("*/") == std::string::npos) {
+                std::string comment = std::string("/*\n * File: ") +
+                    "\n * Author: \n * Date: \n * File Description: \n */\n";
+                lines[i] = comment + "\n" + lines[i];
             }
         }
     }
-    
+    // check for standard namespace pt 2
+    if (have_namespace) {
+        if (!have_main) lines[namespaceLineNum] += " // Shouldn't have std namespace";
+    }
 }
