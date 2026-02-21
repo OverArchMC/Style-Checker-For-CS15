@@ -32,13 +32,7 @@ private:
     bool isFunctionStart(const std::string& line);
     int findFunctionEnd(int startingLine);
     void readLines(std::ifstream &input, std::ofstream &output);
-<<<<<<< HEAD
-    
     void oncePerFile();
-    
-=======
-    void oncePerFile();
->>>>>>> 1c4ea3de260f5870367caf671e00874029979c69
     void lineLength(int i);
     void whileBoolean(int i);
     void operatorSpacing(int i);

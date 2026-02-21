@@ -9,7 +9,6 @@ static bool hasFileHeader(const std::vector<std::string>& lines);
 
 StyleChecker::StyleChecker(std::ifstream &input, std::ofstream &output) {
    readLines(input, output);
-   lineLength();
    oncePerFile();
    printLines(output);
 }
@@ -28,99 +27,6 @@ void StyleChecker::printLines(std::ofstream &output) {
     for (int i = 0; i < num_lines; i++) {
         output << lines[i] << std::endl;
     }
-}
-
-
-// std::vector<std::string> splitStringIntoWords(const std::string& input) {
-//     std::stringstream ss(input);
-//     std::vector<std::string> words;
-//     std::string word;
-    
-//     // Read words one by one using the >> operator, which delimits by whitespace
-//     while (ss >> word) {
-//         words.push_back(word);
-//     }
-
-//     return words;
-// }
-
-
-// void StyleChecker::parseFunctions() {
-//     int num_lines = lines.size();
-//     int func_start;
-//     int func_end;
-//     for (int i =  0; i < num_lines; i++) {
-//         int line_length = lines[i].size();
-//         if (lines[i].at(line_length - 1))
-//     }
-// }
-
-void StyleChecker::lineLength() {
-    int indent_level = 0;
-
-    for (size_t i = 0; i < lines.size(); i++){
-        const std::string original = lines[i]; // keep unmodified line for checks
-
-        // Skip comment lines (use original)
-        if (original.find("//") != std::string::npos &&
-            original.find("//") == original.find_first_not_of(" \t")) {
-                continue; 
-        }
-        if (original.length() > 80){ 
-            std::string comment = " // Exceeds 80-char line limit; length: " + std::to_string(original.length());
-            lines[i] += comment;
-        }
-
-        // can't write loops dependent on true/false
-        if(original.find("while (true)") != std::string::npos || original.find("while (false)") != std::string::npos){
-            std::string error = " // Loops must be dependent on a condition";
-            lines[i] += error;
-        }
-
-        // check for || && ! and check for tab pt 1 and check for + - = spacing
-        bool indentDone = false; // for checking tab
-        bool skip = false; // for checking !
-        for (size_t j = 0; j < original.length(); j++){
-            if (original.at(j) == '|' and original.at(j) == '|') {
-                std::string comment = " // Use \"or\" instead of \"||\" ";
-                lines[i] += comment;
-                break;
-            }
-            if (original.at(j) == '&' and original.at(j) == '&') {
-                std::string comment = " // Use \"and\" instead of \"&&\" ";
-                lines[i] += comment;
-                break;
-            }
-            if (original.at(j) == '!' and original.at(j+1) == '=') skip == true;
-            else if (original.at(j) == '!' and original.at(j) != '=' and !(skip)) {
-                std::string comment = " // Use \"not\" instead of \"!\" ";
-                lines[i] += comment;
-                skip == false;
-                break;
-            }
-
-            // checking for + - * == spacing 
-            if (original.at(j) == '+' || original.at(j) == '*' || original.at(j) == '/' || original.at(j) == '%') {
-                if (original.at(j-1) != ' ' || original.at(j+1) != ' ') {
-                    lines[i] += " // Add space before and after binary operator";
-                    break;
-                }
-            }
-            if (original.at(j) == '-' && original.at(j+1) != '>') {
-                if (original.at(j-1) != ' ' || original.at(j+1) != ' ') {
-                    lines[i] += " // Add space before and after binary operator"; 
-                    break;
-                }
-            }
-            if (original.at(j) == '=' && original.at(j+1) != '=' && original.at(j-1) != '=') {
-                if (original.at(j-1) != ' ' || original.at(j+1) != ' ') {
-                    lines[i] += " // Add space before and after binary operator"; 
-                    break;
-                }
-            }
-        }
-
-    
 }
 
 void StyleChecker::oncePerFile(){
