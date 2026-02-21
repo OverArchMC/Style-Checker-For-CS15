@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-tufts-blue: #3E8EDE;
+  --color-tufts-brown: #48302A;
+  --color-tufts-dark: #1E1E1E;
+  --color-tufts-light: #F5F5F5;
+}
+
+body {
+  background-color: var(--color-tufts-dark);
+  color: var(--color-tufts-light);
+  font-family: 'Inter', sans-serif;
+}
