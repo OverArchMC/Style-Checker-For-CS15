@@ -1,184 +1,36 @@
-/*
- *  ActionStack.pp
- *  Kyra McCandless
- *  2/18/26
- *
- *  CS 15 Project 2 Typewriter
- *
- *  This file contains the implementation of the ActionStack class.
- */
-
-
-#include "ActionStack.h"
-
-/*
- * name:      ActionStack
- * purpose:   make a ActionStack from no information, set all the values to
- *            default
- * arguments: none
- * returns:   none
- * effects:   sets the size to 0
- * other:     none
- */
-ActionStack::ActionStack() {
-    num_actions = 0;
-}
-
-/*
- * name:      ~ActionStack
- * purpose:   handle any memory as the ActionStack goes out of scope
- * arguments: none
- * returns:   none
- * effects:   none
- * other:     is called automatically when an ActionStack goes out of scope
- */
-ActionStack::~ActionStack() {
-}
-
-/*
- * name:      isEmpty
- * purpose:   determine whether the ActionStack is empty
- * arguments: none
- * returns:   the boolean evaluation of the emptiness of the ActionStack
- * effects:   none
- * other:     none
- */
-bool ActionStack::isEmpty() const {
-    return num_actions == 0;
-}
-
-/*
- * name:      size
- * purpose:   provide read only access to size of the ActionStack
- * arguments: none
- * returns:   the integer number of items in the ActionStack
- * effects:   none
- * other:     none
- */
-int ActionStack::size() const {
-    return num_actions;
-}
-
-/*
- * name:      top
- * purpose:   provide read only access ot the top Action of the ActionStack
- * arguments: none
- * returns:   the Action at the top of the ActionStack representing the most
- *            recently performed Action
- * effects:   none
- * other:     none
- */
-ActionStack::Action ActionStack::top() const {
-    // Throw a runtime error if the stack is empty
-    checkEmpty();
-    return buffer.front();
-}
-
-/*
- * name:      pop
- * purpose:   remove the most recently performed Action
- * arguments: none
- * returns:   none
- * effects:   removes the first Action and decrements size
- * other:     none
- */
-void ActionStack::pop() {
-    // Throw a runtime error if the stack is empty
-    checkEmpty();
-    buffer.pop_front();
-    num_actions--;
-}
-
-/*
- * name:      push
- * purpose:   add an Action to the top of the ActionStack
- * arguments: the Action representing the action performed
- * returns:   none
- * effects:   adds elem to the top of the ActionStack and increments the size
- * other:     none
- */
-void ActionStack::push(Action elem) {
-    buffer.push_front(elem);
-    num_actions++;
-}
-
-/*
- * name:      push
- * purpose:   add an Action to the top of the ActionStack
- * arguments: information about the action to add
- * returns:   none
- * effects:   adds an Action to the top of the ActionStack with all the given
- *            information, increments the size
- * other:     none
- */
-void ActionStack::push(char c, bool was_del, std::size_t l, std::size_t col) {
-    // Create an action from the given info
-    ActionStack::Action action;
-    action.character = c;
-    action.deleted = was_del;
-    action.column = col;
-    action.line = l;
-    // Add the action
-    push(action);
-}
-
-/*
- * name:      clear
- * purpose:   empty the ActionStack
- * arguments: none
- * returns:   none
- * effects:   sets the ActionStack to empty
- * other:     none
- */
-void ActionStack::clear() {
-    // Pop until clear
-    while (not isEmpty()) {
-        pop();
+This is a test file
+This is a test file
+This is a test file
+This is a test file
+This is a test file
+This is a test file
+This is a test file
+break;
+This is a test file This is a test file This is a test file This is a test file This is a test file
+This is || test 
+This is break; 
+This is && 
+!= which should pass 
+(!should pass) 
+    The indenting is correct 
+     the indenting is wrong 
+ indenting is wrong 
+{
+    {
+ indenting is wrong
     }
 }
-
-/*
- * name:      emptyError
- * purpose:   throw an error if the ActionStack is empty
- * arguments: none
- * returns:   none
- * effects:   throws an std::runtime_error if the ActionStack is empty
- * other:     none
- */
-void ActionStack::checkEmpty() const {
-
-
-    // Throw a runtime error if the stack is empty
-
-
-
-
-
-
-
-
-    if (isEmpty()) {
-
-
-
-
-
-
-
-
-        throw std::runtime_error("empty_stack");
-
-
-
-
-
-
-
-    }
-
-
-
-
-
-    
+while (1 == 1) {
+    if (1 == 1) {
+        for (1 == 1) {
+            this is correct indentation
+      }
+   }
 }
+
+
+if(this+ is incorrect) {
+   
+}
+
+if (something) something = 2;

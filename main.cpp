@@ -15,16 +15,16 @@ int main (int argc, char *argv[]) {
         cerr << "ERROR: Cannot open file " << filename << endl;
     }
 
-    // Check style
-    StyleChecker checker(infile);
-    checker.parseFunctions();
-    checker.checkFuncLength(30);
-    checker.printLines();
-    // checker.printFunctions();
+    // This is the file that contains comments 
+    std::ofstream outputFile(argv[2]);
 
+    // Check style
+    StyleChecker checker(infile, outputFile);
+
+    // Close file stream
     infile.close();
 
-    // Return todo list
+    // output todo 
 
     return 0;
 }
