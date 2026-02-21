@@ -32,7 +32,13 @@ private:
     bool isFunctionStart(const std::string& line);
     int findFunctionEnd(int startingLine);
     void readLines(std::ifstream &input, std::ofstream &output);
-    void lineLength();
+    void lineLength(int i);
+    void whileBoolean(int i);
+    void operatorSpacing(int i);
+    void singleLineLoop(int i);
+    void breakStatements(int i);
+    void argumentSpacing(int i);
+    void indentation(int i, int *level);
 
     // CHECK ONCE FOR EVERY LINE 
     // 80 characters (done)

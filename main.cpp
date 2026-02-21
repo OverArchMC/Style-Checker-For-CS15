@@ -20,6 +20,8 @@ int main (int argc, char *argv[]) {
 
     // Check style
     StyleChecker checker(infile, outputFile);
+    checker.run();
+    checker.printLines(outputFile);
 
     // Close file stream
     infile.close();

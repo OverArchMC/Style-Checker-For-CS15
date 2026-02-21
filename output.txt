@@ -1,0 +1,78 @@
+/*
+ *  PassengerQueue.cpp // Incorrect indentation. Expected 0 spaces.
+ *  Kyra McCandless // Incorrect indentation. Expected 0 spaces.
+ *  2/6/26 // Incorrect indentation. Expected 0 spaces.
+ * // Incorrect indentation. Expected 0 spaces.
+ *  CS 15 Project 1 MetroSim // Incorrect indentation. Expected 0 spaces.
+ * // Incorrect indentation. Expected 0 spaces.
+ *  This file contains an implementation of the PasssengerQueue class. // Incorrect indentation. Expected 0 spaces.
+ * // Incorrect indentation. Expected 0 spaces.
+ */ // Incorrect indentation. Expected 0 spaces.
+
+#include "PassengerQueue.h"
+
+
+/*
+ * name:      front // Incorrect indentation. Expected 0 spaces.
+ * purpose:   access the first Passenger in the PassengerQueue // Incorrect indentation. Expected 0 spaces.
+ * arguments: none // Incorrect indentation. Expected 0 spaces.
+ * returns:   the Passenger object representing the first passenger in line // Incorrect indentation. Expected 0 spaces.
+ * effects:   none // Incorrect indentation. Expected 0 spaces.
+ * other:     throws a runtime error if the PassengerQueue is emtpy // Add a space between the if statement arguments and the brackets // Incorrect indentation. Expected 0 spaces.
+ */ // Incorrect indentation. Expected 0 spaces.
+Passenger PassengerQueue::front() {
+    if (size() == 0) { // Add a space between the if statement arguments and the brackets
+        throw std::runtime_error("cannot access front of empty queue");
+    }
+    return queue.front();
+}
+
+/*
+ * name:      dequeue // Incorrect indentation. Expected 0 spaces.
+ * purpose:   remove the first passenger from the line // Incorrect indentation. Expected 0 spaces.
+ * arguments: none // Incorrect indentation. Expected 0 spaces.
+ * returns:   none // Incorrect indentation. Expected 0 spaces.
+ * effects:   none // Incorrect indentation. Expected 0 spaces.
+ * other:     none // Incorrect indentation. Expected 0 spaces.
+ */ // Incorrect indentation. Expected 0 spaces.
+void PassengerQueue::dequeue() {
+    queue.pop_front();
+}
+
+/*
+ * name:      enqueue // Incorrect indentation. Expected 0 spaces.
+ * purpose:   add a passenger to the back of the line // Incorrect indentation. Expected 0 spaces.
+ * arguments: the Passenger representing the passenger to add // Incorrect indentation. Expected 0 spaces.
+ * returns:   none // Incorrect indentation. Expected 0 spaces.
+ * effects:   increases the size of the list by 1 // Incorrect indentation. Expected 0 spaces.
+ * other:     none // Incorrect indentation. Expected 0 spaces.
+ */ // Incorrect indentation. Expected 0 spaces.
+void PassengerQueue::enqueue(const Passenger &passenger) { // Use "and" instead of "&&" 
+    queue.push_back(passenger);
+}
+
+/*
+ * name:      size // Incorrect indentation. Expected 0 spaces.
+ * purpose:   determine the number of passengers in line // Incorrect indentation. Expected 0 spaces.
+ * arguments: none // Incorrect indentation. Expected 0 spaces.
+ * returns:   the integer number of passengers in the PassengerQueue // Incorrect indentation. Expected 0 spaces.
+ * effects:   none // Incorrect indentation. Expected 0 spaces.
+ * other:     none // Incorrect indentation. Expected 0 spaces.
+ */ // Incorrect indentation. Expected 0 spaces.
+int PassengerQueue::size() {
+    return queue.size();
+}
+
+/*
+ * name:      print // Incorrect indentation. Expected 0 spaces.
+ * purpose:   dispaly information about the PassengerQueue // Incorrect indentation. Expected 0 spaces.
+ * arguments: a reference to the output stream to display the inforamation // Incorrect indentation. Expected 0 spaces.
+ * returns:   none // Incorrect indentation. Expected 0 spaces.
+ * effects:   none // Incorrect indentation. Expected 0 spaces.
+ * other:     none // Incorrect indentation. Expected 0 spaces.
+ */ // Incorrect indentation. Expected 0 spaces.
+void PassengerQueue::print(std::ostream &output) { // Use "and" instead of "&&" 
+    for (Passenger p : queue) { // Add a space between the for loop arguments and the brackets
+        p.print(output);
+    }
+}
