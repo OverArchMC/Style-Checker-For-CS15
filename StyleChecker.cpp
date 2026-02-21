@@ -242,13 +242,26 @@ void StyleChecker::whileBoolean(int i) {
 
 void StyleChecker::run() {
     
-    int indent_level = 0; // for indentation check 
+    int indent_level = 0; // for indentation check
+    bool blockComment = false;
+    
 
     for (size_t i = 0; i < lines.size(); i++) {
+        bool singleComment = false;
+
+        if (lines.at(i).find("//") != std::string::npos && lines.at(i).find("//") == lines.at(i).find_first_not_of(" \t")){
+            singleComment = true;
+        }
+
+        if (lines[i].find("/*") != std::string::npos) {
+            blockComment = true;
+        }
+
         // Skip comment lines
-        if(lines.at(i).find("//") != std::string::npos && lines.at(i).find("//") == lines.at(i).find_first_not_of(" \t")){
+        if (blockComment or singleComment) {
             continue;
-        }       
+        }
+
         lineLength(i);
         whileBoolean(i);
         operatorSpacing(i);
@@ -256,5 +269,9 @@ void StyleChecker::run() {
         breakStatements(i);
         argumentSpacing(i);
         indentation(i, &indent_level);
+
+        if (lines[i].find("*/") != std::string::npos) {
+            blockComment = false;
+        }
     }
 }
