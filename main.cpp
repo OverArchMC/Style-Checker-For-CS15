@@ -17,6 +17,10 @@ int main (int argc, char *argv[]) {
 
     // Check style
     StyleChecker checker(infile);
+    checker.parseFunctions();
+    checker.checkFuncLength(30);
+    checker.printLines();
+    // checker.printFunctions();
 
     infile.close();
 

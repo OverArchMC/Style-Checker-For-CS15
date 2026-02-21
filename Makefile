@@ -1,14 +1,11 @@
 CXX      = clang++
-CXXFLAGS = -g3 -Wall -Wextra -Wpedantic -Wshadow -std=c++11
+CXXFLAGS = -g3 -Wall -Wextra -Wpedantic -Wshadow -std=c++11 -fsanitize=address
 
-checker: main.o StyleChecker.o Function.o
+checker: main.o StyleChecker.o
 	$(CXX) $(CXXFLAGS) $^ -o checker
 
 StyleChecker.o: StyleChecker.cpp StyleChecker.h
 	$(CXX) $(CXXFLAGS) -c StyleChecker.cpp
-
-Function.o: Function.cpp Function.h
-	$(CXX) $(CXXFLAGS) -c Function.cpp
 
 main.o: main.cpp
 	$(CXX) $(CXXFLAGS) -c main.cpp

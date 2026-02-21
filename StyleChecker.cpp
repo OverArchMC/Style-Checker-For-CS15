@@ -21,26 +21,34 @@ void StyleChecker::printLines() {
     }
 }
 
-
-std::vector<std::string> StyleChecker::splitStringIntoWords(const std::string& input) {
-    std::stringstream ss(input);
-    std::vector<std::string> words;
-    std::string word;
-    // Read words one by one using the >> operator, which delimits by whitespace
-    while (ss >> word) {
-        words.push_back(word);
+void StyleChecker::printFunctions() {
+    std::ofstream output("functions.txt");
+    int num_functions = functions.size();
+    for (int i = 0; i < num_functions; i++) {
+        Function func = functions[i];
+        output << std::endl << std::endl << "Function #" << i << " starts on line " << func.start
+        << " and ends on " << func.end << std::endl << std::endl;
+        for (int l = func.start; l < func.end; l++) {
+            output << lines[l] << std::endl;
+        }
     }
-    return words;
 }
 
-
 void StyleChecker::parseFunctions() {
-    int num_lines = lines.size();
     int func_start;
     int func_end;
-    for (int i =  0; i < num_lines; i++) {
-        if (isFunctionStart(lines[i])) {
+    int num_lines = lines.size();
+    for (int i = 0; i < num_lines; i++) {
+        std::string curr_line = lines[i];
+        if (isFunctionStart(curr_line)) {
             func_start = i;
+            func_end = findFunctionEnd(func_start);
+            if (func_end != -1) {
+                StyleChecker::Function func;
+                func.start = func_start;
+                func.end = func_end;
+                functions.push_back(func);
+            }
         }
     }
 }
@@ -51,16 +59,53 @@ bool StyleChecker::isFunctionStart(const std::string& line) {
     // std::string MyClass::myMethod(int a, double b)
     // template functions, const, static, virtual, etc.
     std::regex funcPattern(
-        R"(^\s*)"                          // optional leading whitespace
-        R"((?:(?:inline|static|virtual|explicit|constexpr|const|friend|extern)\s+)*)"  // optional specifiers
-        R"((?:[\w\s*&:<>,]+?)\s+)"         // return type
-        R"(([\w:~]+)\s*)"                  // function name (including destructors ~, scope ::)
-        R"(\([^)]*\))"                     // parameter list
-        R"((?:\s*(?:const|noexcept|override|final))*)"  // optional trailing qualifiers
-        R"(\s*\{?\s*$)"                    // optional opening brace at end of line
+        "^\\s*" // disregards leading whitespace
+        "(?:(?:inline|static|virtual|explicit|constexpr|const|friend|extern)\\s+)*" // matches these expressions
+        "(?:[\\w\\s*&:<>,]+?\\s+)?"   // return type is optional for constructors
+        "([\\w:~]+)\\s*" // Matches scope resolution operator and destructor
+        "\\([^)]*\\)" // Matches parameter list
+        "(?:\\s*(?:const|noexcept|override|final))*" // Matches trailing quantifiers
+        "\\s*\\{?\\s*$" // Optional opening curly brace
     );
 
     return std::regex_match(line, funcPattern);
+}
+
+int StyleChecker::findFunctionEnd(int startingLine) {
+    int balance = 0;
+    bool started = false;
+
+    int num_lines = lines.size();
+    
+    for (int i = startingLine; i < num_lines; i++) {
+        // std::cout << "Current balance: " << balance << std::endl;
+        for (char c : lines[i]) {
+            if (c == '{') {
+                started = true;
+                balance++;
+            }
+            else if (c == '}') {
+                balance--;
+            }
+            if (balance == 0 and started) {
+                // std::cout << "Found end!" << std::endl;
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+void StyleChecker::checkFuncLength(int max_len) {
+    for (StyleChecker::Function func : functions) {
+        if ((func.end - func.start) > max_len) {
+            func.too_long = true;
+            int length = func.end - func.start;
+            std::stringstream ss;
+            ss << "// Exceeds " << max_len << " line limit (" << length << " lines)";
+            lines.insert(lines.begin() + func.start, ss.str());
+        }
+    }
 }
 
 // void check_every_line(){

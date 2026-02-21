@@ -6,23 +6,33 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include <set>
+#include <fstream>
 #include <regex>
 
-#include "Function.h"
-
 class StyleChecker{
+
 public:
+
     StyleChecker(std::ifstream &input);
     void printLines();
+    void printFunctions();
     void parseFunctions();
-    bool isFunctionStart(const std::string& line);
-    void readLines(std::ifstream &input);
-    std::vector<std::string> splitStringIntoWords(const std::string& input);
+
+    void checkFuncLength(int max_len);
+
+    struct Function {
+        bool too_long = false;
+        int start;
+        int end;
+    };
     
 private:
     std::vector<std::string> lines;
     std::vector<Function> functions;
+
+    bool isFunctionStart(const std::string& line);
+    int findFunctionEnd(int startingLine);
+    void readLines(std::ifstream &input);
 
     // void readLines(std::ifstream &input);
     // void check_every_line();
