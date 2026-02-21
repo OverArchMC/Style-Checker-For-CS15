@@ -1,0 +1,36 @@
+This is a test file
+This is a test file
+This is a test file
+This is a test file
+This is a test file
+This is a test file
+This is a test file
+break; // No break statements allowed // Add spaces around operators.
+This is a test file This is a test file This is a test file This is a test file This is a test file // Exceeds 80-char line limit; length: 99 // Add space between and after binary operator // Add spaces around operators.
+This is || test  // Use "or" instead of "||"  // Add spaces around operators.
+This is break;  // No break statements allowed // Add spaces around operators.
+This is &&  // Use "and" instead of "&&"  // Add spaces around operators.
+!= which should pass  // Add space between and after binary operator // Add spaces around operators.
+(!should pass)  // Use "not" instead of "!"  // Add spaces around operators.
+    The indenting is correct  // Incorrect indentation. Expected 0 spaces. // Add spaces around operators.
+     the indenting is wrong  // Incorrect indentation. Expected 0 spaces. // Add spaces around operators.
+ indenting is wrong  // Incorrect indentation. Expected 0 spaces. // Add spaces around operators.
+{
+    {
+ indenting is wrong // Incorrect indentation. Expected 8 spaces. // Add spaces around operators.
+    }
+}
+while (1 == 1) { // Add a space between the while loop arguments and the brackets // Add spaces around operators.
+    if (1 == 1) { // Add a space between the if statement arguments and the brackets // Add spaces around operators.
+        for (1 == 1) { // Add a space between the for loop arguments and the brackets // Add spaces around operators.
+            this is correct indentation
+      } // Incorrect indentation. Expected 8 spaces. // Add spaces around operators.
+   } // Incorrect indentation. Expected 4 spaces. // Add spaces around operators.
+}
+
+
+if(this+ is incorrect) { // Add space between and after binary operator // Add a space between the if statement arguments and the brackets // Add a space between the if statement arguments and the brackets // Add spaces around operators.
+    // Incorrect indentation. Expected 4 spaces. // Add spaces around operators.
+}
+
+if (something) something = 2; // Add a space between the if statement arguments and the brackets // No single line loops or if statements. // Add spaces around operators.

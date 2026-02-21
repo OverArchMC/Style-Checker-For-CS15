@@ -18,12 +18,15 @@ int main (int argc, char *argv[]) {
         cerr << "ERROR: Cannot open file " << filename << endl;
     }
 
+    // This is the file that contains comments 
+    std::ofstream outputFile(argv[2]);
+
     // Check style
-    StyleChecker checker(infile);
+    StyleChecker checker(infile, outputFile);
 
     infile.close();
 
-    // Return todo list
+    // output todo 
 
     return 0;
 }
