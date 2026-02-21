@@ -32,11 +32,7 @@ private:
     bool isFunctionStart(const std::string& line);
     int findFunctionEnd(int startingLine);
     void readLines(std::ifstream &input, std::ofstream &output);
-<<<<<<< HEAD
-    void lineLength();
     void oncePerFile();
-    
-=======
     void lineLength(int i);
     void whileBoolean(int i);
     void operatorSpacing(int i);
@@ -44,7 +40,6 @@ private:
     void breakStatements(int i);
     void argumentSpacing(int i);
     void indentation(int i, int *level);
->>>>>>> e667fc2e5201190b80a81ed12a45b902b2e8af4c
 
     // CHECK ONCE FOR EVERY LINE 
     // 80 characters (done)
@@ -62,14 +57,9 @@ private:
     // data members in classes should be declared private (sylvia)
     // no std namespace in .h file (done)
 
-<<<<<<< HEAD
     // CHECK ONCE PER FUNCTION (kyra)
     // 30 lines 
     // function contracts 
-=======
-    // CHECK ONCE PER FUNCTION 
-    // 30 lines (done)
->>>>>>> e667fc2e5201190b80a81ed12a45b902b2e8af4c
 
     // no repetitive code...
 };

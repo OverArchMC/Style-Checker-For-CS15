@@ -231,31 +231,6 @@ void StyleChecker::operatorSpacing(int i) {
             break;
         }
         // checking for + - * == spacing 
-        //     if (original.at(j) == '+' || original.at(j) == '*' || original.at(j) == '/' || original.at(j) == '%') {
-        //         if (original.at(j-1) != ' ' || original.at(j+1) != ' ') {
-        //             lines[i] += " // Add space before and after binary operator";
-        //             break;
-        //         }
-        //     }
-        //     if (original.at(j) == '-' && original.at(j+1) != '>') {
-        //         if (original.at(j-1) != ' ' || original.at(j+1) != ' ') {
-        //             lines[i] += " // Add space before and after binary operator"; 
-        //             break;
-        //         }
-        //     }
-        //     if (original.at(j) == '=' && original.at(j+1) != '=' && original.at(j-1) != '=') {
-        //         if (original.at(j-1) != ' ' || original.at(j+1) != ' ') {
-        //             lines[i] += " // Add space before and after binary operator"; 
-        //             break;
-        //         }
-        //     }
-        // }
-
-
-
-
-        
-        // checking for + - * == spacing 
     //     if (lines.at(i)[j] == '+' || lines.at(i)[j] == '*' || lines.at(i)[j] == '/' || lines.at(i)[j] == '%') {
     //         if (lines.at(i)[j-1] != ' ' || lines.at(i)[j+1] != ' ') {
     //             lines[i] += " // Add space between and after binary operator";
@@ -345,6 +320,11 @@ void StyleChecker::run() {
             blockComment = true;
         }
 
+        if (lines[i].find("*/") != std::string::npos) {
+            blockComment = false;
+            singleComment = true;
+        }
+
         // Skip comment lines
         if (blockComment or singleComment) {
             continue;
@@ -357,9 +337,5 @@ void StyleChecker::run() {
         breakStatements(i);
         argumentSpacing(i);
         indentation(i, &indent_level);
-
-        if (lines[i].find("*/") != std::string::npos) {
-            blockComment = false;
-        }
     }
 }
