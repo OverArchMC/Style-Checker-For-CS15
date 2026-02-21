@@ -1,0 +1,78 @@
+/*
+ *  PassengerQueue.cpp
+ *  Kyra McCandless
+ *  2/6/26
+ *
+ *  CS 15 Project 1 MetroSim
+ *
+ *  This file contains an implementation of the PasssengerQueue class.
+ *
+ */
+
+#include "PassengerQueue.h"
+
+
+/*
+ * name:      front
+ * purpose:   access the first Passenger in the PassengerQueue
+ * arguments: none
+ * returns:   the Passenger object representing the first passenger in line
+ * effects:   none
+ * other:     throws a runtime error if the PassengerQueue is emtpy
+ */
+Passenger PassengerQueue::front() {
+    if (size() == 0) {
+        throw std::runtime_error("cannot access front of empty queue");
+    }
+    return queue.front();
+}
+
+/*
+ * name:      dequeue
+ * purpose:   remove the first passenger from the line
+ * arguments: none
+ * returns:   none
+ * effects:   none
+ * other:     none
+ */
+void PassengerQueue::dequeue() {
+    queue.pop_front();
+}
+
+/*
+ * name:      enqueue
+ * purpose:   add a passenger to the back of the line
+ * arguments: the Passenger representing the passenger to add
+ * returns:   none
+ * effects:   increases the size of the list by 1
+ * other:     none
+ */
+void PassengerQueue::enqueue(const Passenger &passenger) {
+    queue.push_back(passenger);
+}
+
+/*
+ * name:      size
+ * purpose:   determine the number of passengers in line
+ * arguments: none
+ * returns:   the integer number of passengers in the PassengerQueue
+ * effects:   none
+ * other:     none
+ */
+int PassengerQueue::size() {
+    return queue.size();
+}
+
+/*
+ * name:      print
+ * purpose:   dispaly information about the PassengerQueue
+ * arguments: a reference to the output stream to display the inforamation
+ * returns:   none
+ * effects:   none
+ * other:     none
+ */
+void PassengerQueue::print(std::ostream &output) {
+    for (Passenger p : queue) {
+        p.print(output);
+    }
+}
