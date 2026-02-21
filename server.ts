@@ -11,20 +11,35 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  // Configure multer for file uploads
-  const upload = multer({ dest: 'uploads/' });
-
   // Ensure uploads directory exists
-  if (!fs.existsSync('uploads')) {
-    fs.mkdirSync('uploads');
+  const uploadDir = path.join(__dirname, 'uploads');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
   }
+
+  // Configure multer
+  const upload = multer({ dest: uploadDir });
+
+  // Request logging middleware
+  app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+  });
 
   // API Routes
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });
   });
 
-  app.post('/api/upload', upload.single('file'), async (req, res) => {
+  app.post('/api/upload', (req, res, next) => {
+    upload.single('file')(req, res, (err) => {
+      if (err) {
+        console.error('Multer error:', err);
+        return res.status(500).json({ error: 'File upload failed' });
+      }
+      next();
+    });
+  }, async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
