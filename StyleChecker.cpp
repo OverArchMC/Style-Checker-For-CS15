@@ -2,6 +2,7 @@
 
 StyleChecker::StyleChecker(std::ifstream &input, std::ofstream &output) {
    readLines(input, output);
+   oncePerFile();
    parseFunctions();
    checkFuncLength(30);
 }
@@ -21,6 +22,7 @@ void StyleChecker::printLines(std::ofstream &output) {
         output << lines[i] << std::endl;
     }
 }
+
 
 void StyleChecker::printFunctions() {
     std::ofstream output("functions.txt");
@@ -53,6 +55,68 @@ void StyleChecker::parseFunctions() {
         }
     }
 }
+
+void StyleChecker::oncePerFile(){
+    // these variables are for standard namespace 
+    bool have_namespace = false; 
+    bool have_main = false; 
+    int namespaceLineNum; 
+
+    // these variables are for members declared private 
+    bool headerFile = false;
+    bool reachedPrivate = false;
+
+    int braces = 0;
+    for (size_t i = 0; i < lines.size(); i++) {
+
+        // check for members declared private 
+        if (lines.at(i).find("class ") != std::string::npos) headerFile = true;
+        //if (lines.at(i).find("private:") != std::string::npos) reachedPrivate = true;
+        // I DON'T KNOW HOW TO CHECK IF SOMETHING IS A FUNCTION OR A VARIABLE - like what if it's a struct type 
+        
+        // check for standard namespace pt 1
+        if (lines.at(i).find("using namespace std;") != std::string::npos) {
+            have_namespace = true;
+            namespaceLineNum = i + 1;
+        }
+        if (lines.at(i).find("int main") != std::string::npos) have_main = true;
+
+        //check for globals
+        for(int j = 0; j < lines.at(i).length(); j++){
+            if(lines.at(i)[j] == '{') braces++;
+            if(lines.at(i)[j] == '}') braces--;
+            //checking to see if we're in a function or not...
+        }
+        if(braces == 0){
+            headerFile = false;
+            reachedPrivate = false;
+            if(lines.at(i).find(";") != std::string::npos && lines.at(i).find("const") == std::string::npos){
+                std::string error = " Not allowed a global variable.";
+                lines[i] += error;
+                //if not a global const nothing can be put outside the functions
+            }
+        }
+        if(headerFile){
+            if (lines.at(i).find("private:") != std::string::npos) reachedPrivate = true;
+            else if(lines.at(i).find("public:")!= std::string::npos){
+                reachedPrivate = false;
+            }
+        }
+        // check for file header
+        if(i == 0){
+            if(lines.at(i).find("/*") == std::string::npos || lines.at(i).find("*/") == std::string::npos) {
+                std::string comment = std::string("/*\n * File: ") +
+                    "\n * Author: \n * Date: \n * File Description: \n */\n";
+                lines[i] = comment + "\n" + lines[i];
+            }
+        }
+    }
+    // check for standard namespace pt 2
+    if (have_namespace) {
+        if (!have_main) lines[namespaceLineNum] += " // Shouldn't have std namespace";
+    }
+}
+
     
 bool StyleChecker::isFunctionStart(const std::string& line) {
     // Matches patterns like:
@@ -166,7 +230,31 @@ void StyleChecker::operatorSpacing(int i) {
             skip == false;
             break;
         }
+        // checking for + - * == spacing 
+        //     if (original.at(j) == '+' || original.at(j) == '*' || original.at(j) == '/' || original.at(j) == '%') {
+        //         if (original.at(j-1) != ' ' || original.at(j+1) != ' ') {
+        //             lines[i] += " // Add space before and after binary operator";
+        //             break;
+        //         }
+        //     }
+        //     if (original.at(j) == '-' && original.at(j+1) != '>') {
+        //         if (original.at(j-1) != ' ' || original.at(j+1) != ' ') {
+        //             lines[i] += " // Add space before and after binary operator"; 
+        //             break;
+        //         }
+        //     }
+        //     if (original.at(j) == '=' && original.at(j+1) != '=' && original.at(j-1) != '=') {
+        //         if (original.at(j-1) != ' ' || original.at(j+1) != ' ') {
+        //             lines[i] += " // Add space before and after binary operator"; 
+        //             break;
+        //         }
+        //     }
+        // }
 
+
+
+
+        
         // checking for + - * == spacing 
     //     if (lines.at(i)[j] == '+' || lines.at(i)[j] == '*' || lines.at(i)[j] == '/' || lines.at(i)[j] == '%') {
     //         if (lines.at(i)[j-1] != ' ' || lines.at(i)[j+1] != ' ') {
