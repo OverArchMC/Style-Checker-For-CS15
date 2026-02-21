@@ -1,0 +1,5 @@
+{
+  "name": "CS15 Style Checker",
+  "description": "A web-based utility for Tufts University CS15 students to automate code style checking.",
+  "requestFramePermissions": []
+}
