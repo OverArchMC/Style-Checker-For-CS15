@@ -1,23 +1,38 @@
-#include <fstream>
+
+#ifndef __STYLE_CHECKER_H_
+#define __STYLE_CHECKER_H_
+
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Function.h"
+#include <sstream>
+#include <fstream>
+#include <regex>
 
 class StyleChecker{
+
 public:
     StyleChecker(std::ifstream &input, std::ofstream &output);
     void printLines(std::ofstream &output);
+    void printFunctions();
     void run();
     void parseFunctions();
+    void checkFuncLength(int max_len);
+
+    struct Function {
+        bool too_long = false;
+        int start;
+        int end;
+    };
     
 private:
     std::vector<std::string> lines;
-    //std::vector<Function> functions;
+    std::vector<Function> functions;
 
+    bool isFunctionStart(const std::string& line);
+    int findFunctionEnd(int startingLine);
     void readLines(std::ifstream &input, std::ofstream &output);
     void lineLength();
-    
 
     // CHECK ONCE FOR EVERY LINE 
     // 80 characters (done)
@@ -37,7 +52,9 @@ private:
     // no std namespace in .h file 
 
     // CHECK ONCE PER FUNCTION 
-    // 30 lines (kyra)
+    // 30 lines (done)
 
     // no repetitive code...
 };
+
+#endif

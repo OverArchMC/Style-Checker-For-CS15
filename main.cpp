@@ -1,6 +1,3 @@
-#include <fstream>
-#include <iostream>
-#include <string>
 #include "StyleChecker.h"
 
 using namespace std;
@@ -24,6 +21,7 @@ int main (int argc, char *argv[]) {
     // Check style
     StyleChecker checker(infile, outputFile);
 
+    // Close file stream
     infile.close();
 
     // output todo 

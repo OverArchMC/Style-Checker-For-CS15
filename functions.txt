@@ -1,0 +1,78 @@
+
+
+Function #0 starts on line 22 and ends on 24
+
+ActionStack::ActionStack() {
+    num_actions = 0;
+
+
+Function #1 starts on line 34 and ends on 35
+
+ActionStack::~ActionStack() {
+
+
+Function #2 starts on line 45 and ends on 47
+
+bool ActionStack::isEmpty() const {
+    return num_actions == 0;
+
+
+Function #3 starts on line 57 and ends on 59
+
+int ActionStack::size() const {
+    return num_actions;
+
+
+Function #4 starts on line 70 and ends on 74
+
+ActionStack::Action ActionStack::top() const {
+    // Throw a runtime error if the stack is empty
+    checkEmpty();
+    return buffer.front();
+
+
+Function #5 starts on line 84 and ends on 89
+
+void ActionStack::pop() {
+    // Throw a runtime error if the stack is empty
+    checkEmpty();
+    buffer.pop_front();
+    num_actions--;
+
+
+Function #6 starts on line 99 and ends on 102
+
+void ActionStack::push(Action elem) {
+    buffer.push_front(elem);
+    num_actions++;
+
+
+Function #7 starts on line 113 and ends on 122
+
+void ActionStack::push(char c, bool was_del, std::size_t l, std::size_t col) {
+    // Create an action from the given info
+    ActionStack::Action action;
+    action.character = c;
+    action.deleted = was_del;
+    action.column = col;
+    action.line = l;
+    // Add the action
+    push(action);
+
+
+Function #8 starts on line 132 and ends on 137
+
+void ActionStack::clear() {
+    // Pop until clear
+    while (not isEmpty()) {
+        pop();
+    }
+
+
+Function #9 starts on line 147 and ends on 152
+
+void ActionStack::checkEmpty() const {
+    // Throw a runtime error if the stack is empty
+    if (isEmpty()) {
+        throw std::runtime_error("empty_stack");
+    }
