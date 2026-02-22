@@ -7,6 +7,8 @@ import { AnimatePresence, motion } from 'motion/react';
 
 type AppState = 'idle' | 'uploading' | 'processing' | 'complete' | 'error';
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
+
 export default function App() {
   const [state, setState] = useState<AppState>('idle');
   const [file, setFile] = useState<File | null>(null);
@@ -21,7 +23,7 @@ export default function App() {
     formData.append('file', selectedFile);
 
     try {
-      const response = await fetch('/api/upload', {
+      const response = await fetch(`${API_BASE_URL}/api/upload`, {
         method: 'POST',
         body: formData,
       });

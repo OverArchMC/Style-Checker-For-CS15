@@ -4,12 +4,55 @@ import { createServer as createViteServer } from 'vite';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+function resolveBackendExecutable(): string | null {
+  const backendDir = path.join(__dirname, '..', 'backend');
+  const candidates = [
+    path.join(backendDir, 'checker.exe'),
+    path.join(backendDir, 'checker'),
+  ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+
+  return null;
+}
+
+function resolveRuntimePathEntries(): string[] {
+  const entries: string[] = [];
+
+  const localAppData = process.env.LOCALAPPDATA;
+  if (localAppData) {
+    const winlibsBin = path.join(
+      localAppData,
+      'Microsoft',
+      'WinGet',
+      'Packages',
+      'BrechtSanders.WinLibs.POSIX.UCRT.LLVM_Microsoft.Winget.Source_8wekyb3d8bbwe',
+      'mingw64',
+      'bin'
+    );
+
+    if (fs.existsSync(winlibsBin)) {
+      entries.push(winlibsBin);
+    }
+  }
+
+  return entries;
+}
+
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
   // Ensure uploads directory exists
   const uploadDir = path.join(__dirname, 'uploads');
@@ -23,6 +66,16 @@ async function startServer() {
   // Request logging middleware
   app.use((req, res, next) => {
     console.log(`${req.method} ${req.url}`);
+    next();
+  });
+
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(204);
+    }
     next();
   });
 
@@ -48,43 +101,60 @@ async function startServer() {
     const originalName = req.file.originalname;
 
     try {
-      // MOCK: Simulate C++ executable processing
-      // In production, replace this with:
-      // const { exec } = await import('child_process');
-      // exec(`./style_checker "${filePath}"`, (error, stdout, stderr) => { ... });
-      
       console.log(`Processing file: ${originalName} at ${filePath}`);
       
-      // Simulate processing delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Generate a mock report based on the file extension
-      let report = '';
-      if (originalName.endsWith('.cpp') || originalName.endsWith('.h')) {
-        report = `STYLE CHECK REPORT FOR: ${originalName}\n`;
-        report += `----------------------------------------\n`;
-        report += `[ERROR] Line 12: Function name 'my_function' should be camelCase 'myFunction'.\n`;
-        report += `[WARNING] Line 45: Line length exceeds 80 characters (85 chars).\n`;
-        report += `[ERROR] Line 88: Missing function contract for 'calculateTotal'.\n`;
-        report += `[INFO] Line 102: Good use of constants.\n`;
-        report += `\nTotal Errors: 2\nTotal Warnings: 1\n`;
-      } else {
-        report = `STYLE CHECK REPORT FOR: ${originalName}\n`;
-        report += `----------------------------------------\n`;
-        report += `[INFO] File type not strictly checked by mock engine, but here is a sample output.\n`;
-        report += `[WARNING] Line 1: Header comment missing.\n`;
+      const backendPath = resolveBackendExecutable();
+      if (!backendPath) {
+        fs.unlink(filePath, () => {});
+        return res.status(500).json({
+          error: 'Backend executable not found. Build backend/checker.exe first.',
+        });
       }
 
-      // Clean up the uploaded file
+      const outputPath = path.join(uploadDir, `output_${Date.now()}.txt`);
+      
+      // Execute the C++ style checker
+      const command = `"${backendPath}" "${filePath}" "${outputPath}"`;
+      console.log(`Executing: ${command}`);
+
+      const runtimePaths = resolveRuntimePathEntries();
+      const mergedPath = [
+        ...runtimePaths,
+        process.env.PATH ?? '',
+      ].filter(Boolean).join(path.delimiter);
+      
+      const { stderr } = await execAsync(command, {
+        env: {
+          ...process.env,
+          PATH: mergedPath,
+        },
+      });
+      if (stderr?.trim().length) {
+        console.warn('Checker stderr:', stderr);
+      }
+
+      if (!fs.existsSync(outputPath)) {
+        throw new Error('Checker finished without generating an output file.');
+      }
+      
+      // Read the output file
+      const report = fs.readFileSync(outputPath, 'utf-8');
+      
+      // Clean up the uploaded file and output file
       fs.unlink(filePath, (err) => {
         if (err) console.error('Error deleting temp file:', err);
+      });
+      fs.unlink(outputPath, (err) => {
+        if (err) console.error('Error deleting output file:', err);
       });
 
       res.json({ report });
 
     } catch (error) {
+      fs.unlink(filePath, () => {});
       console.error('Processing error:', error);
-      res.status(500).json({ error: 'Failed to process file' });
+      const message = error instanceof Error ? error.message : 'Failed to process file';
+      res.status(500).json({ error: message });
     }
   });
 
@@ -98,6 +168,13 @@ async function startServer() {
   } else {
     // Production static file serving (if built)
     app.use(express.static(path.join(__dirname, 'dist')));
+
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api')) {
+        return next();
+      }
+      return res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    });
   }
 
   app.listen(PORT, '0.0.0.0', () => {
