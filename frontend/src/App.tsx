@@ -7,8 +7,6 @@ import { AnimatePresence, motion } from 'motion/react';
 
 type AppState = 'idle' | 'uploading' | 'processing' | 'complete' | 'error';
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
-
 export default function App() {
   const [state, setState] = useState<AppState>('idle');
   const [file, setFile] = useState<File | null>(null);
@@ -23,15 +21,28 @@ export default function App() {
     formData.append('file', selectedFile);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/upload`, {
+      const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Server Error:', errorText);
-        throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+        const rawError = await response.text();
+        let serverMessage = `Upload failed: ${response.status} ${response.statusText}`;
+
+        try {
+          const parsed = JSON.parse(rawError);
+          if (parsed?.error && typeof parsed.error === 'string') {
+            serverMessage = parsed.error;
+          }
+        } catch {
+          if (rawError.trim().length > 0) {
+            serverMessage = rawError;
+          }
+        }
+
+        console.error('Server Error:', serverMessage);
+        throw new Error(serverMessage);
       }
 
       const data = await response.json();
@@ -39,7 +50,11 @@ export default function App() {
       setState('complete');
     } catch (err) {
       console.error(err);
-      setError('Failed to process file. Please try again.');
+      if (err instanceof Error && err.message.trim().length > 0) {
+        setError(err.message);
+      } else {
+        setError('Failed to process file. Please try again.');
+      }
       setState('error');
     }
   };
@@ -109,5 +124,7 @@ export default function App() {
         )}
       </AnimatePresence>
     </Layout>
+  );
+}
   );
 }
