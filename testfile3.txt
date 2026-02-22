@@ -1,0 +1,160 @@
+/*
+ * evil.cpp
+ * CS15 —— Lab 03: make, diff
+ *
+ * Implementation of the Roster class
+ *
+ */
+
+#include <iostream>
+#include <string>
+#include <cstdio>
+#include <fstream>
+
+#include "roster.h"
+#include "Student.h"
+
+using namespace std;
+
+static const int INITIAL_CAPACITY = 20;
+
+/* 
+ * constructor
+ * Purpose:     Initializes an empty roster
+ * Parameters:  None
+ * Returns:     None
+ * Effects:     Initizalizes an instance of Roster with capacity 
+ *              INITIAL_CAPACITY
+ */
+Roster::Roster()
+{
+        list     = new Student[INITIAL_CAPACITY];
+        capacity = INITIAL_CAPACITY;
+        size     = 0;
+}
+
+/* 
+ * destructor
+ * Purpose:     Frees any heap-allocated memory
+ * Parameters:  None
+ * Returns:     None
+ */
+Roster::~Roster()
+{
+        delete [] list;
+}
+
+/* 
+ * do_evil
+ * Purpose:     Changes all the grades of the students from a given file 
+ * Parameters:  string - filename of file to be read with students' names
+ * Returns:     None
+ */
+void Roster::do_evil(string filename)
+{
+        read_file(filename);
+        change_grades();
+        write_out(filename);
+}
+
+/* 
+ * read_file
+ * Purpose:     Reads in student data from specified filename
+ * Parameters:  string - filename of file to be read with students' names and 
+ *                       grades
+ * Returns:     None
+ * Effects:     Stores student data in private array list
+ */
+void Roster::read_file(string filename)
+{
+        ifstream infile;
+        infile.open(filename);
+        if (not infile.is_open())
+                throw "Darn --- cannot read:  " + filename;
+
+        string name;
+        int    grade;
+    
+        while (infile >> name and infile >> grade) {
+                add_student(name, grade);
+        }
+        infile.close();
+}
+
+/* 
+ * add_student
+ * Purpose:    Creates instance of type Student and adds to the roster
+ * Parameters: string - name of student 
+ *             int    - grade of student
+ * Returns:    None
+ */
+void Roster::add_student(string name, int grade)
+{
+        if (size == capacity) {
+                expand();
+        }
+        Student s;
+        s.name  = name;
+        s.grade = grade;
+        list[size] = s;
+        size++;
+}
+
+/* 
+ * change_grades
+ * Purpose:     Changes grades of every student in roster to 0
+ * Parameters:  None
+ * Returns:     None
+ */
+void Roster::change_grades()
+{
+        for (int i = 0; i < size; i++) {
+                list[i].grade = 0;
+        }
+}
+
+/* 
+ * write_out
+ * Purpose:     Writes the student information (name, grade) from the roster to
+ *              into the given file.
+ * Parameters:  string - filename to write to
+ * Returns:     None
+ */
+void Roster::write_out(string filename)
+{
+        ofstream outfile;
+        outfile.open(filename);
+        if (not outfile.is_open())
+                throw "Rats, foiled again:  Cannot write:  " + filename;
+
+        cerr << "Here is a log of failed students:" << endl;
+        for (int i = 0; i < size; i++) {
+                cerr << "Just failed student " << (list[i]).name 
+                     << ".  Feels good!" << endl;
+                outfile << (list[i]).name << " " << (list[i]).grade << endl;
+        }
+        outfile.close();
+}
+
+/* 
+ * expand
+ * Purpose:     Increases rosters capacity
+ * Parameters:  None
+ * Returns:     None
+ *
+ * Note:  Never need more than twice capacity because items only added one at a
+ * time. Need to be more flexible if there are bulk additions.
+ */
+void Roster::expand()
+{
+        int      new_capacity = 2 * capacity;
+        Student *temp         = new Student[new_capacity];
+
+        for (int i = 0; i < size; i++) {
+                temp[i] = list[i];
+        }
+        
+        delete [] list;
+        list = temp;
+        capacity = new_capacity;
+}
