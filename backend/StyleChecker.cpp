@@ -118,7 +118,6 @@ void StyleChecker::parseFunctions() {
     for (int i = 0; i < num_lines; i++) {
         std::string curr_line = lines[i];
         if (isFunctionStart(curr_line)) {
-            std::cout << "function found on line " << i+1 << std::endl;
             func_start = i;
             func_end = findFunctionEnd(func_start);
             if (func_end != -1) {
@@ -344,7 +343,6 @@ void StyleChecker::singleLineLoop(int i) {
 }
 
 void StyleChecker::lineLength(int i, int original_length) {
-    // std::cout << "LINE LENGTH CALLED FOR LINE " << i << std::endl;
     if(original_length > 80) {
         std::string comment = " // Exceeds 80-char line limit (length: " + std::to_string(original_length) + " )";
         lines[i] += comment;
