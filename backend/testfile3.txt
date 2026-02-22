@@ -208,6 +208,36 @@ void 30_line_check(){
     }
 }
 
+// purpose: 
 void edge_case_for_functions(){
-    std::cout << "what if I have curly braces { here }"
+    std::cout << "what if I have curly braces { here }";
+}
+
+// if
+void indentation_edge_cases(){
+    // previous line ends with ')' -> current line indentation should be ignored
+    if (condition)
+            body_should_not_trigger_indent_error;
+
+    // previous line ends with '+' -> continuation indentation should be ignored
+    very_long_expression = left_side +
+                right_side +
+        final_piece;
+
+    // previous line ends with ',' -> continuation indentation should be ignored
+    function_call(arg1,
+              arg2,
+        arg3);
+
+    // previous line ends with ';' -> indentation should be checked (should fail)
+    done = true;
+          this_line_should_trigger_indent_error;
+
+    // previous line ends with '{' -> normal indent check still applies
+    if (another_condition) {
+      this_line_should_trigger_indent_error_too;
+    }
+
+    // what if it's a curly brace in a string 
+    std::cout << "Train or PassengerQueue or whatever { stuff here }";
 }

@@ -180,29 +180,32 @@ void StyleChecker::checkFuncLength(int max_len) {
             ss << " // Exceeds " << max_len << "-line limit (" << length << " lines)";
             lines[func.start] += ss.str();
         }
-
-        // check function contract 
-        int currLine = func.start - 1;
-        bool purposeExists = false;
-        while (currLine >= 0 && lines[currLine].find("//") != std::string::npos || lines[currLine].find("*") != std::string::npos) {
-            if (lines[currLine].find("purpose:") != std::string::npos || lines[currLine].find("Purpose:") != std::string::npos){
-                purposeExists = true;
-                break;
-            }
-            currLine--;
-        }
-        if (!purposeExists) lines[func.start-1] += " // Add function contract";
     }
 }
 
 void StyleChecker::oncePerFunction(){
     // if this is not .cpp file, SKIP WHOLE FUNCTIO
-    for (int i = 0; i < lines.size(); i++) {
+    for (size_t i = 0; i < lines.size(); i++) {
         // check for braces 
-        if (lines[i]find("{"))
-        // then check if it's if for while 
+        if (lines[i].find("{") != std::string::npos) {
+            if (lines[i].find("for") != std::string::npos || lines[i].find("if") != std::string::npos || lines[i].find("while") != std::string::npos || lines[i].find("else if") != std::string::npos || lines[i].find("else") != std::string::npos ||
+                lines[i-1].find("for") != std::string::npos || lines[i-1].find("if") != std::string::npos || lines[i-1].find("while") != std::string::npos || lines[i-1].find("else if") != std::string::npos || lines[i-1].find("else") != std::string::npos) {
+                    continue;
+                }
+            // now we have confirmed that it's not an if/ elseif statement or for/while loop
 
-        // if not, function found!! 
+            // check if function contract exists
+            int currLine = i - 1;
+            bool purposeExists = false;
+            while (currLine >= 0 && (lines[currLine].find("//") != std::string::npos || lines[currLine].find("*") != std::string::npos)) {
+                if (lines[currLine].find("purpose:") != std::string::npos || lines[currLine].find("Purpose:") != std::string::npos){
+                    purposeExists = true;
+                    break;
+                }
+                currLine--;
+            }
+            if (!purposeExists) lines[i-1] += " // Add function contract";
+        }
     }
 }
 
@@ -236,6 +239,10 @@ void StyleChecker::operatorSpacing(int i) {
     size_t commentPos = code.find("//");
     if (commentPos != std::string::npos) {
         code = code.substr(0, commentPos);
+    }
+    size_t lastCode = code.find_last_not_of(" \t");
+    if (lastCode != std::string::npos) {
+        code = code.substr(0, lastCode + 1);
     }
 
     size_t firstCode = code.find_first_not_of(" \t");
@@ -293,7 +300,8 @@ void StyleChecker::operatorSpacing(int i) {
             if ((code[j] == '<' || code[j] == '>') && ((j + 1 < code.length() && code[j+1] == code[j]) || (j > 0 && code[j-1] == code[j]))) continue;
             if (code[j] == '=' && ((j + 1 < code.length() && code[j+1] == '=') || (j > 0 && (code[j-1] == '=' || code[j-1] == '!' || code[j-1] == '<' || code[j-1] == '>' || code[j-1] == '+' || code[j-1] == '-' || code[j-1] == '*' || code[j-1] == '/' || code[j-1] == '%')))) continue;
             if ((code[j] == '+' || code[j] == '-' || code[j] == '*' || code[j] == '/' || code[j] == '%') && (j + 1 < code.length() && code[j+1] == '=')) continue;
-            if (j == 0 || j == code.length() - 1 || code[j-1] != ' ' || code[j+1] != ' ') {
+            if (j == code.length() - 1) continue;
+            if (j == 0 || code[j-1] != ' ' || code[j+1] != ' ') {
                 std::string comment = " // Add spaces around operator '" + std::string(1, code[j]) + "'";
                 lines[i] += comment;
                 break;
@@ -319,7 +327,23 @@ void StyleChecker::indentation(int i, int *level) {
     
     int expected_spaces = (*level) * 4;
     int expected_spaces2 = (*level) * 8;
-    if(leading_spaces != expected_spaces && leading_spaces != expected_spaces2 && leading_spaces != 0){
+    bool skipIndentCheck = false;
+    if (i > 0) {
+        std::string prev = lines.at(i - 1);
+        size_t prevComment = prev.find("//");
+        if (prevComment != std::string::npos) {
+            prev = prev.substr(0, prevComment);
+        }
+        size_t prevEnd = prev.find_last_not_of(" \t");
+        if (prevEnd != std::string::npos) {
+            char lastChar = prev[prevEnd];
+            if (lastChar != '{' && lastChar != '}' && lastChar != ';') {
+                skipIndentCheck = true;
+            }
+        }
+    }
+
+    if(!skipIndentCheck && leading_spaces != expected_spaces && leading_spaces != expected_spaces2 && leading_spaces != 0){
         lines[i] += " // Incorrect indentation";
     }
     
@@ -398,4 +422,5 @@ void StyleChecker::run() {
     }
     oncePerFile();
     checkFuncLength(30);
+    oncePerFunction();
 }

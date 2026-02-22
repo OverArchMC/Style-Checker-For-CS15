@@ -117,18 +117,18 @@ void single_line_loops_check(){
     if (condition) do something; // No single line loops or if statements.
     else if (condition) my eyes are tired; // No single line loops or if statements.
 
-    // the following should pass // Add function contract
+    // the following should pass 
     if (condition) 
-        do something;// Add function contract
+        do something;
     if (condition) {
         do something;
-    }// Add function contract
+    }
     if (condition)
     {
         do something;
     } else if (condition) {
-        do something else; // Add function contract
-        if(){ // Add a space between the if keyword and '('// Add function contract
+        do something else; 
+        if(){ // Add a space between the if keyword and '('
                 if(){ // Add a space between the if keyword and '(' // Incorrect indentation
                          // Incorrect indentation
                 } // Incorrect indentation
@@ -146,7 +146,7 @@ void single_line_loops_check(){
  */ 
 void indent_check(){
  1 space // Incorrect indentation
-        check// Add function contract
+        check
     if (this should pass)
         this should also pass;
   2 spaces  // Incorrect indentation
@@ -156,19 +156,19 @@ void indent_check(){
 
 // the following line is just 5 spaces and it shouldn't pass index 
      // Incorrect indentation
-// Add function contract
-void and_or_not_check(){// Add function contract
+ // Add function contract
+void and_or_not_check(){
     for (this || can't && pass TWICE)  // Use "or" instead of "||" 
         I ate too many oreos;
-    if (!I don't think this should pass) double fail should happen here; // Use "not" instead of "!"  // No single line loops or if statements.// Add function contract
+    if (!I don't think this should pass) double fail should happen here; // Use "not" instead of "!"  // No single line loops or if statements.
     else if (not fail) 
-        please pass; // Add function contract
+        please pass; 
     while (!pass)  // Use "not" instead of "!" 
         this should fail;
     function_call_that_should_work(&reference); 
 }
-// Add function contract
-void 30_line_check(){ // Exceeds 30-line limit (38 lines)// Add function contract
+ // Add function contract
+void 30_line_check(){ // Exceeds 30-line limit (38 lines)
     if (a very very long if statement that could be mistaken for a function) { // Exceeds 30-line limit (36 lines)
         a 
         very 
@@ -206,4 +206,38 @@ void 30_line_check(){ // Exceeds 30-line limit (38 lines)// Add function contrac
         long 
         if 
     }
+}
+
+// purpose: 
+void edge_case_for_functions(){
+    std::cout << "what if I have curly braces { here }"; // Incorrect indentation
+}
+
+// if
+void indentation_edge_cases(){
+    // previous line ends with ')' -> current line indentation should be ignored
+    if (condition)
+            body_should_not_trigger_indent_error;
+
+    // previous line ends with '+' -> continuation indentation should be ignored
+    very_long_expression = left_side +
+                right_side +
+        final_piece;
+
+    // previous line ends with ',' -> continuation indentation should be ignored
+    function_call(arg1,
+              arg2,
+        arg3);
+
+    // previous line ends with ';' -> indentation should be checked (should fail)
+    done = true;
+          this_line_should_trigger_indent_error; // Incorrect indentation
+ // Add function contract
+    // previous line ends with '{' -> normal indent check still applies
+    if (another_condition) {
+      this_line_should_trigger_indent_error_too; // Incorrect indentation
+    }
+
+    // what if it's a curly brace in a string 
+    std::cout << "Train or PassengerQueue or whatever { stuff here }"; // Incorrect indentation
 }
