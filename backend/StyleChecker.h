@@ -46,7 +46,7 @@ private:
     void breakStatements(int i);
     void argumentSpacing(int i);
     void indentation(int i, int *level);
-    void oncePerFunction();
+    //void oncePerFunction();
 
     // LAST THING if we want to do this: 
     // function contracts 

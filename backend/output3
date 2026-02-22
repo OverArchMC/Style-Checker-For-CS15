@@ -169,7 +169,7 @@ void and_or_not_check(){
 }
  // Add function contract
 void 30_line_check(){ // Exceeds 30-line limit (38 lines)
-    if (a very very long if statement that could be mistaken for a function) { // Exceeds 30-line limit (36 lines)
+    if (a very very long if statement that could be mistaken for a function) {
         a 
         very 
         very 
@@ -213,7 +213,7 @@ void edge_case_for_functions(){
     std::cout << "what if I have curly braces { here }"; // Incorrect indentation
 }
 
-// if
+
 void indentation_edge_cases(){
     // previous line ends with ')' -> current line indentation should be ignored
     if (condition)
@@ -232,7 +232,7 @@ void indentation_edge_cases(){
     // previous line ends with ';' -> indentation should be checked (should fail)
     done = true;
           this_line_should_trigger_indent_error; // Incorrect indentation
- // Add function contract
+
     // previous line ends with '{' -> normal indent check still applies
     if (another_condition) {
       this_line_should_trigger_indent_error_too; // Incorrect indentation

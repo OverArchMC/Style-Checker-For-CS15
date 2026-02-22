@@ -118,6 +118,7 @@ void StyleChecker::parseFunctions() {
     for (int i = 0; i < num_lines; i++) {
         std::string curr_line = lines[i];
         if (isFunctionStart(curr_line)) {
+            std::cout << "function found on line " << i+1 << std::endl;
             func_start = i;
             func_end = findFunctionEnd(func_start);
             if (func_end != -1) {
@@ -137,6 +138,7 @@ bool StyleChecker::isFunctionStart(const std::string& line) {
     // template functions, const, static, virtual, etc.
     std::regex funcPattern(
         "^\\s*" // disregards leading whitespace
+        "(?!\\s*(?:for|if|else|while|switch|return)\\b)"
         "(?:(?:inline|static|virtual|explicit|constexpr|const|friend|extern)\\s+)*" // matches these expressions
         "(?:[\\w\\s*&:<>,]+?\\s+)?"   // return type is optional for constructors
         "([\\w:~]+)\\s*" // Matches scope resolution operator and destructor
@@ -180,32 +182,17 @@ void StyleChecker::checkFuncLength(int max_len) {
             ss << " // Exceeds " << max_len << "-line limit (" << length << " lines)";
             lines[func.start] += ss.str();
         }
-    }
-}
 
-void StyleChecker::oncePerFunction(){
-    // if this is not .cpp file, SKIP WHOLE FUNCTIO
-    for (size_t i = 0; i < lines.size(); i++) {
-        // check for braces 
-        if (lines[i].find("{") != std::string::npos) {
-            if (lines[i].find("for") != std::string::npos || lines[i].find("if") != std::string::npos || lines[i].find("while") != std::string::npos || lines[i].find("else if") != std::string::npos || lines[i].find("else") != std::string::npos ||
-                lines[i-1].find("for") != std::string::npos || lines[i-1].find("if") != std::string::npos || lines[i-1].find("while") != std::string::npos || lines[i-1].find("else if") != std::string::npos || lines[i-1].find("else") != std::string::npos) {
-                    continue;
-                }
-            // now we have confirmed that it's not an if/ elseif statement or for/while loop
-
-            // check if function contract exists
-            int currLine = i - 1;
-            bool purposeExists = false;
-            while (currLine >= 0 && (lines[currLine].find("//") != std::string::npos || lines[currLine].find("*") != std::string::npos)) {
-                if (lines[currLine].find("purpose:") != std::string::npos || lines[currLine].find("Purpose:") != std::string::npos){
-                    purposeExists = true;
-                    break;
-                }
-                currLine--;
+        int currLine = func.start - 1;
+        bool purposeExists = false;
+        while (currLine >= 0 && (lines[currLine].find("//") != std::string::npos || lines[currLine].find("*") != std::string::npos)) {
+            if (lines[currLine].find("purpose:") != std::string::npos || lines[currLine].find("Purpose:") != std::string::npos){
+                purposeExists = true;
+                break;
             }
-            if (!purposeExists) lines[i-1] += " // Add function contract";
+            currLine--;
         }
+        if (!purposeExists) lines[func.start-1] += " // Add function contract";
     }
 }
 
@@ -422,5 +409,4 @@ void StyleChecker::run() {
     }
     oncePerFile();
     checkFuncLength(30);
-    oncePerFunction();
 }
