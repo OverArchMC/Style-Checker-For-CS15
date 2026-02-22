@@ -1,4 +1,4 @@
-
+import express from 'express';
 import multer from 'multer';
 import { createServer as createViteServer } from 'vite';
 import fs from 'fs';
@@ -100,4 +100,7 @@ async function startServer() {
   });
 }
 
-startServer();
+startServer().catch((error) => {
+  console.error('Server startup failed:', error);
+  process.exit(1);
+});
