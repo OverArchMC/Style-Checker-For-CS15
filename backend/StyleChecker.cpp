@@ -118,6 +118,7 @@ void StyleChecker::parseFunctions() {
     for (int i = 0; i < num_lines; i++) {
         std::string curr_line = lines[i];
         if (isFunctionStart(curr_line)) {
+            std::cout << "function found on line " << i+1 << std::endl;
             func_start = i;
             func_end = findFunctionEnd(func_start);
             if (func_end != -1) {
@@ -137,6 +138,7 @@ bool StyleChecker::isFunctionStart(const std::string& line) {
     // template functions, const, static, virtual, etc.
     std::regex funcPattern(
         "^\\s*" // disregards leading whitespace
+        "(?!\\s*(?:for|if|else|while|switch|return)\\b)"
         "(?:(?:inline|static|virtual|explicit|constexpr|const|friend|extern)\\s+)*" // matches these expressions
         "(?:[\\w\\s*&:<>,]+?\\s+)?"   // return type is optional for constructors
         "([\\w:~]+)\\s*" // Matches scope resolution operator and destructor
@@ -199,7 +201,7 @@ void StyleChecker::oncePerFunction(){
     // if this is not .cpp file, SKIP WHOLE FUNCTIO
     for (int i = 0; i < lines.size(); i++) {
         // check for braces 
-        if (lines[i]find("{"))
+        // if (lines[i]find("{"))
         // then check if it's if for while 
 
         // if not, function found!! 

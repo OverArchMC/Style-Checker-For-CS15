@@ -11,7 +11,7 @@
 
 // ===================== FUNCTION LENGTH TESTS =====================
 
-// SHORT: exactly 10 lines, should pass // Add function contract
+// SHORT: exactly 10 lines, should pass
 int shortFunction(int x) {
     int a = x + 1;
     int b = a * 2;
@@ -24,7 +24,7 @@ int shortFunction(int x) {
     return h;
 }
 
-// SHORT: exactly 30 lines, should pass (border case) // Add function contract
+// SHORT: exactly 30 lines, should pass (border case)
 int exactlyThirtyLines(int x) {
     int a = x + 1;
     int b = a + 2;
@@ -57,8 +57,8 @@ int exactlyThirtyLines(int x) {
     return bb;
 }
 
-// LONG: 35 lines, should trigger length warning // Add function contract
-int tooLongFunction(int x) { // Exceeds 30-line limit (35 lines)
+// LONG: 35 lines, should trigger length warning
+int tooLongFunction(int x) {
     int a = x + 1;
     int b = a + 2;
     int c = b + 3;
@@ -97,69 +97,69 @@ int tooLongFunction(int x) { // Exceeds 30-line limit (35 lines)
 
 // ===================== STYLE VIOLATION TESTS =====================
 
-// BAD: line over 80 characters // Add function contract
+// BAD: line over 80 characters
 void longLineFunction() {
-    std::string reallyLongVariableNameThatExceedsTheEightyCharacterLineLimitSetByTheStyleChecker = "hello"; // Exceeds 80-char line limit (length: 107 )
+    std::string reallyLongVariableNameThatExceedsTheEightyCharacterLineLimitSetByTheStyleChecker = "hello";
 }
 
-// BAD: while (true) and while (false) // Add function contract
+// BAD: while (true) and while (false)
 void infiniteLoops() {
-    while (true) { // Loops must be dependent on a condition
+    while (true) {
         std::cout << "infinite" << std::endl;
-        break; // No break statements allowed
+        break;
     }
-    while (false) { // Loops must be dependent on a condition
+    while (false) {
         std::cout << "never runs" << std::endl;
     }
 }
 
-// BAD: break statements // Add function contract
+// BAD: break statements
 void hasBreak() {
-    for (int i = 0; i < 10; i++) { // No single line loops or if statements.
+    for (int i = 0; i < 10; i++) {
         if (i == 5) {
-            break; // No break statements allowed
+            break;
         }
     }
 }
 
-// BAD: missing spaces before parens // Add function contract
+// BAD: missing spaces before parens
 void badSpacing() {
-    for(int i = 0; i < 10; i++) { // No single line loops or if statements. // Add a space between the for loop keyword and '('
-        if(i % 2 == 0) { // Add a space between the if keyword and '('
+    for(int i = 0; i < 10; i++) {
+        if(i % 2 == 0) {
             std::cout << i << std::endl;
         }
-        while(false) { // Add a space between the while keyword and '('
+        while(false) {
             std::cout << "never" << std::endl;
         }
     }
 }
 
-// BAD: bad indentation // Add function contract
+// BAD: bad indentation
 void badIndentation() {
         int x = 5;
     if (x > 3) {
-            std::cout << x << std::endl; // Incorrect indentation
+            std::cout << x << std::endl;
     }
 }
 
-// BAD: single line if/for/while // Add function contract
+// BAD: single line if/for/while
 void singleLineStatements() {
     int x = 5;
-    if (x > 3) std::cout << x << std::endl; // No single line loops or if statements.
-    for (int i = 0; i < 5; i++) std::cout << i << std::endl; // No single line loops or if statements.
-    while (x > 0) x--; // No single line loops or if statements.
+    if (x > 3) std::cout << x << std::endl;
+    for (int i = 0; i < 5; i++) std::cout << i << std::endl;
+    while (x > 0) x--;
 }
 
-// GOOD: no violations // Add function contract
+// GOOD: no violations
 void cleanFunction(int x) {
     if (x > 0) {
         std::cout << x << std::endl;
     }
-    for (int i = 0; i < x; i++) { // No single line loops or if statements.
+    for (int i = 0; i < x; i++) {
         std::cout << i << std::endl;
     }
 }
- // Add function contract
+
 int main() {
     cleanFunction(5);
     return 0;
