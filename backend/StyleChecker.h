@@ -19,7 +19,13 @@ public:
     void parseFunctions();
     void checkFuncLength(int max_len);
 
+    struct Comment {
+        int start;
+        int end;
+    };
+
     struct Function {
+        Comment contract;
         bool too_long = false;
         int start;
         int end;
@@ -33,7 +39,7 @@ private:
     int findFunctionEnd(int startingLine);
     void readLines(std::ifstream &input, std::ofstream &output);
     void oncePerFile();
-    void lineLength(int i);
+    void lineLength(int i, int original_length);
     void whileBoolean(int i);
     void operatorSpacing(int i);
     void singleLineLoop(int i);
@@ -41,27 +47,8 @@ private:
     void argumentSpacing(int i);
     void indentation(int i, int *level);
 
-    // CHECK ONCE FOR EVERY LINE 
-    // 80 characters (done)
-    // no || ! && (done)
-    // if while for statement ) {           (done)
-    // no if, else if, else on the same line (done)
-    // there should be spaces in between +, = *, etc use (need to test) (done)
-    // indenting                            (done)
-    // can't write loops dependent on true/false (done)
-    // no break (done)
-
-    // CHECK ONCE PER FILE 
-    // headers (joey)
-    // not global variable (need to redo)
-    // data members in classes should be declared private (done)
-    // no std namespace in .h file (done)
-
-    // CHECK ONCE PER FUNCTION (kyra)
-    // 30 lines 
+    // LAST THING if we want to do this: 
     // function contracts 
-
-    // no repetitive code...
 };
 
 #endif

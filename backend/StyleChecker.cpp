@@ -8,8 +8,7 @@ static bool hasFileHeader(const std::vector<std::string>& lines);
 
 StyleChecker::StyleChecker(std::ifstream &input, std::ofstream &output) {
    readLines(input, output);
-   run();
-   oncePerFile();
+   parseFunctions();
 }
 
 void StyleChecker::readLines(std::ifstream &input, std::ofstream &output) {
@@ -28,32 +27,7 @@ void StyleChecker::printLines(std::ofstream &output) {
     }
 }
 
-
-// std::vector<std::string> splitStringIntoWords(const std::string& input) {
-//     std::stringstream ss(input);
-//     std::vector<std::string> words;
-//     std::string word;
-    
-//     // Read words one by one using the >> operator, which delimits by whitespace
-//     while (ss >> word) {
-//         words.push_back(word);
-//     }
-
-//     return words;
-// }
-
-
-// void StyleChecker::parseFunctions() {
-//     int num_lines = lines.size();
-//     int func_start;
-//     int func_end;
-//     for (int i =  0; i < num_lines; i++) {
-//         int line_length = lines[i].size();
-//         if (lines[i].at(line_length - 1))
-//     }
-// }
-
-void StyleChecker::oncePerFile(){
+void StyleChecker::oncePerFile() {
     // these variables are for standard namespace 
     bool have_namespace = false; 
     bool have_main = false; 
@@ -88,8 +62,8 @@ void StyleChecker::oncePerFile(){
         if(braces == 0){
             headerFile = false;
             reachedPrivate = false;
-            if(lines.at(i).find(";") != std::string::npos && lines.at(i).find("const") == std::string::npos){
-                std::string error = " Not allowed a global variable.";
+            if(lines.at(i).find(";") != std::string::npos && lines.at(i).find("const") == std::string::npos && lines.at(i).find("using") == std::string::npos && lines.at(i).find("#") == std::string::npos && lines.at(i).find("//") == std::string::npos){
+                std::string error = " // Global variable not allowed";
                 lines[i] += error;
                 //if not a global const nothing can be put outside the functions
             }
@@ -103,8 +77,10 @@ void StyleChecker::oncePerFile(){
         // check for file header
         if (i == 0) {
             if (!hasFileHeader(lines)) {
-                std::string comment = std::string("/*\n * File: \n * Author: \n * Date: \n * File Description: \n */\n");
-                lines[i] = comment + "\n" + lines[i];
+                lines[0] += " // Where is your file header? (filename, author, date, file purpose)";
+                // Temporarily commenting this section out for now, because this changes the total line length of the file and that might affect everything else (like this loop)
+                // std::string comment = std::string("/*\n * File: \n * Author: \n * Date: \n * File Description: \n */\n"); 
+                // lines[i] = comment + "\n" + lines[i]; 
             }
         }
     }
@@ -123,12 +99,76 @@ static bool hasFileHeader(const std::vector<std::string>& lines) {
     for (size_t i = 0; i < maxScan; ++i) {
         const std::string& line = lines[i];
         if (line.find("/*") != std::string::npos) inBlock = true;
-        if (inBlock && line.find("File:") != std::string::npos) sawFileTag = true;
+        if (inBlock && (line.find(".cpp") != std::string::npos || inBlock && line.find(".h") != std::string::npos)) sawFileTag = true;
         if (line.find("*/") != std::string::npos && inBlock) {
             return sawFileTag;
         }
+        if (line.find("//") != std::string::npos &&
+           (line.find(".cpp") != std::string::npos || 
+            line.find(".h") != std::string::npos)) return true;
+    
     }
     return false;
+}
+
+void StyleChecker::parseFunctions() {
+    int func_start;
+    int func_end;
+    int num_lines = lines.size();
+    for (int i = 0; i < num_lines; i++) {
+        std::string curr_line = lines[i];
+        if (isFunctionStart(curr_line)) {
+            func_start = i;
+            func_end = findFunctionEnd(func_start);
+            if (func_end != -1) {
+                StyleChecker::Function func;
+                func.start = func_start;
+                func.end = func_end;
+                functions.push_back(func);
+            }
+        }
+    }
+}
+    
+bool StyleChecker::isFunctionStart(const std::string& line) {
+    // Matches patterns like:
+    // int foo(...)
+    // std::string MyClass::myMethod(int a, double b)
+    // template functions, const, static, virtual, etc.
+    std::regex funcPattern(
+        "^\\s*" // disregards leading whitespace
+        "(?:(?:inline|static|virtual|explicit|constexpr|const|friend|extern)\\s+)*" // matches these expressions
+        "(?:[\\w\\s*&:<>,]+?\\s+)?"   // return type is optional for constructors
+        "([\\w:~]+)\\s*" // Matches scope resolution operator and destructor
+        "\\([^)]*\\)" // Matches parameter list
+        "(?:\\s*(?:const|noexcept|override|final))*" // Matches trailing quantifiers
+        "\\s*\\{?\\s*$" // Optional opening curly brace
+    );
+
+    return std::regex_match(line, funcPattern);
+}
+
+int StyleChecker::findFunctionEnd(int startingLine) {
+    int balance = 0;
+    bool started = false;
+
+    int num_lines = lines.size();
+    
+    for (int i = startingLine; i < num_lines; i++) {
+        for (char c : lines[i]) {
+            if (c == '{') {
+                started = true;
+                balance++;
+            }
+            else if (c == '}') {
+                balance--;
+            }
+            if (balance == 0 and started) {
+                return i;
+            }
+        }
+    }
+    return -1;
 }
 
 void StyleChecker::checkFuncLength(int max_len) {
@@ -136,9 +176,12 @@ void StyleChecker::checkFuncLength(int max_len) {
         if ((func.end - func.start) > max_len) {
             func.too_long = true;
             int length = func.end - func.start;
-            std::stringstream ss;
+            
+            // TEMPORARY change for now, can change back later
+            /*std::stringstream ss;
             ss << "// Exceeds " << max_len << " 30-line limit (" << length << " lines)";
-            lines.insert(lines.begin() + func.start, ss.str());
+            lines.insert(lines.begin() + func.start, ss.str());*/
+            lines[func.start] += " // Exceeds 30-line limit (" + std::to_string(length) + " lines)";
         }
     }
 }
@@ -169,28 +212,76 @@ void StyleChecker::argumentSpacing(int i) {
 
 void StyleChecker::operatorSpacing(int i) {
     // check for || && ! and check for tab pt 1 and check for + - = spacing
-    bool indentDone = false; // for checking tab
-    bool skip = false; // for checking !
-    for (size_t j = 0; j < lines.at(i).length(); j++){
-        if (lines.at(i)[j] == '|' and lines.at(i)[j] == '|') {
+    std::string code = lines.at(i);
+    size_t commentPos = code.find("//");
+    if (commentPos != std::string::npos) {
+        code = code.substr(0, commentPos);
+    }
+
+    size_t firstCode = code.find_first_not_of(" \t");
+    if (firstCode != std::string::npos && code[firstCode] == '#') {
+        return;
+    }
+
+    for (size_t j = 0; j < code.length(); j++){
+        if (j + 1 < code.length() && code[j] == '|' and code[j+1] == '|') {
             std::string comment = " // Use \"or\" instead of \"||\" ";
             lines[i] += comment;
             break;
         }
-        if (lines.at(i)[j] == '&' and lines.at(i)[j] == '&') {
+        if (j + 1 < code.length() && code[j] == '&' and code[j+1] == '&') {
             std::string comment = " // Use \"and\" instead of \"&&\" ";
             lines[i] += comment;
             break;
         }
-        if (lines.at(i)[j] == '!' and lines.at(i)[j+1] == '=') skip == true;
-        else if (lines.at(i)[j] == '!' and lines.at(i)[j] != '=' and !(skip)) {
+        if (code[j] == '!' && (j + 1 >= code.length() || code[j+1] != '=')) {
             std::string comment = " // Use \"not\" instead of \"!\" ";
             lines[i] += comment;
-            skip == false;
             break;
+        }
+
+        if (j + 1 < code.length() && code[j] == '-' && code[j+1] == '>') {
+            j++;
+            continue;
+        }
+
+        if (j + 1 < code.length() && ((code[j] == '=' && code[j+1] == '=') || (code[j] == '!' && code[j+1] == '=') || (code[j] == '<' && code[j+1] == '=') || (code[j] == '>' && code[j+1] == '='))) {
+            if (j == 0 || j + 2 >= code.length() || code[j-1] != ' ' || code[j+2] != ' ') {
+                lines[i] += " // Add spaces around operator '='";
+                break;
+            }
+            j++;
+            continue;
+        }
+
+        if (j + 1 < code.length() && (code[j] == '+' || code[j] == '-' || code[j] == '*' || code[j] == '/' || code[j] == '%') && code[j+1] == '=') {
+            if (j == 0 || j + 2 >= code.length() || code[j-1] != ' ' || code[j+2] != ' ') {
+                lines[i] += " // Add spaces around operator '" + std::string(1, code[j]) + "'";
+                break;
+            }
+            j++;
+            continue;
+        }
+
+        if (j + 1 < code.length() && ((code[j] == '+' && code[j+1] == '+') || (code[j] == '-' && code[j+1] == '-'))) {
+            j++;
+            continue;
+        }
+
+        if (code[j] == '+' || code[j] == '-' || code[j] == '=' || code[j] == '/' || code[j] == '%' || code[j] == '*' || code[j] == '<' || code[j] == '>') {
+            if (code[j] == '-' && ((j + 1 < code.length() && code[j+1] == '>') || (j > 0 && code[j-1] == '<'))) continue;
+            if ((code[j] == '<' || code[j] == '>') && ((j + 1 < code.length() && code[j+1] == code[j]) || (j > 0 && code[j-1] == code[j]))) continue;
+            if (code[j] == '=' && ((j + 1 < code.length() && code[j+1] == '=') || (j > 0 && (code[j-1] == '=' || code[j-1] == '!' || code[j-1] == '<' || code[j-1] == '>' || code[j-1] == '+' || code[j-1] == '-' || code[j-1] == '*' || code[j-1] == '/' || code[j-1] == '%')))) continue;
+            if ((code[j] == '+' || code[j] == '-' || code[j] == '*' || code[j] == '/' || code[j] == '%') && (j + 1 < code.length() && code[j+1] == '=')) continue;
+            if (j == 0 || j == code.length() - 1 || code[j-1] != ' ' || code[j+1] != ' ') {
+                std::string comment = " // Add spaces around operator '" + std::string(1, code[j]) + "'";
+                lines[i] += comment;
+                break;
+            }
         }
     }
 }
+
 
 void StyleChecker::indentation(int i, int *level) {
     // indentation 
@@ -210,18 +301,20 @@ void StyleChecker::indentation(int i, int *level) {
     int expected_spaces = (*level) * 4;
     int expected_spaces2 = (*level) * 8;
     if(leading_spaces != expected_spaces && leading_spaces != expected_spaces2 && leading_spaces != 0){
-        std::string comment = " // Incorrect indentation. Expected " + std::to_string(expected_spaces) + " spaces.";
-        lines[i] += comment;
+        lines[i] += " // Incorrect indentation";
     }
     
     if(lines.at(i).find('{') != std::string::npos){
         (*level)++;
     }
+    // edge case: 
+    // if (condition) 
+    //     no braces 
 }
 
 void StyleChecker::singleLineLoop(int i) {
 // no single line loops
-    if(lines.at(i).find("for") != std::string::npos || lines.at(i).find("while") != std::string::npos || lines.at(i).find("if") != std::string::npos){
+    if(lines.at(i).find("for") != std::string::npos || lines.at(i).find("while") != std::string::npos || lines.at(i).find("if (") != std::string::npos){
         if(lines.at(i).find(";") != std::string::npos){
             std::string comment = " // No single line loops or if statements.";
             lines[i] += comment;
@@ -229,9 +322,10 @@ void StyleChecker::singleLineLoop(int i) {
     }
 }
 
-void StyleChecker::lineLength(int i) {
-    if(lines[i].length() > 80) {
-        std::string comment = " // Exceeds 80-char line limit (length: " + std::to_string(lines[i].length()) + " )";
+void StyleChecker::lineLength(int i, int original_length) {
+    // std::cout << "LINE LENGTH CALLED FOR LINE " << i << std::endl;
+    if(original_length > 80) {
+        std::string comment = " // Exceeds 80-char line limit (length: " + std::to_string(original_length) + " )";
         lines[i] += comment;
     }
 }
@@ -252,6 +346,8 @@ void StyleChecker::run() {
 
     for (size_t i = 0; i < lines.size(); i++) {
         bool singleComment = false;
+        int original_length = lines[i].length();
+        
 
         if (lines.at(i).find("//") != std::string::npos && lines.at(i).find("//") == lines.at(i).find_first_not_of(" \t")){
             singleComment = true;
@@ -270,8 +366,8 @@ void StyleChecker::run() {
         if (blockComment or singleComment) {
             continue;
         }
-
-        lineLength(i);
+        
+        lineLength(i, original_length);
         whileBoolean(i);
         operatorSpacing(i);
         singleLineLoop(i);
@@ -279,4 +375,6 @@ void StyleChecker::run() {
         argumentSpacing(i);
         indentation(i, &indent_level);
     }
+    oncePerFile();
+    checkFuncLength(30);
 }

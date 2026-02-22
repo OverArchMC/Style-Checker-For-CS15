@@ -1,0 +1,149 @@
+//cs15  // Where is your file header? (filename, author, date, file purpose)
+//imp of roster
+//name or wgatever
+//evil
+/*vhbcnmxhf
+bnvfcdhjf
+nvjfmckd,njf*/
+
+
+#include <iostream>
+#include "Student.h"
+
+using namespace std;
+ // Shouldn't have std namespace
+int x = 2; //Not allowed a global variable.
+
+static const int INITIAL_CAPACITY = 20;
+
+/* 
+ * constructor
+ * Purpose:     Initializes an empty roster
+ * Parameters:  None
+ * Returns:     None
+ * Effects:     Initizalizes an instance of Roster with capacity 
+ *              INITIAL_CAPACITY
+ */
+Roster::Roster() // Exceeds 30-line limit (36 lines)
+{
+        list     = new Student[INITIAL_CAPACITY];
+        capacity = INITIAL_CAPACITY;
+        size     = 0;
+
+
+
+        
+
+
+
+        This 
+
+
+        Function
+
+
+        Should 
+
+
+        Exceed 
+
+
+        The 
+
+
+        Thirty
+
+
+        Line 
+
+
+        Length 
+
+
+}
+
+void spacing_checks(){ // Exceeds 30-line limit (39 lines)
+    // this comment shouldn't be read because it's a comment not code, except what if it's past 80 characters?
+    // the following few operations shouldn't pass spacing check 
+    x+1 // Add spaces around operator '+'
+    x=1 // Add spaces around operator '='
+    x-2 // Add spaces around operator '-'
+    x==1 // Add spaces around operator '='
+    x!=0 // Add spaces around operator '='
+    x/9 // Add spaces around operator '/'
+    x%0 // Add spaces around operator '%'
+    8*8 // Add spaces around operator '*'
+
+    1+ 2 // Add spaces around operator '+'
+    1< 2 // Add spaces around operator '<'
+    1+=2 // Add spaces around operator '+'
+    1<= 2 // Add spaces around operator '='
+    1 >=2 // Add spaces around operator '='
+    1 -101010 // Add spaces around operator '-'
+    (1 + 2)/3 // Add spaces around operator '/'
+
+    // the following operations should pass spacing check 
+    x->1
+    x == 2
+    x != 0
+    x / 8
+    x % 0
+    1 <= 2
+    1 += 2
+    1 -= 2
+    1 *= 0
+    x.1
+    x++
+    x--;
+    (1 + 2) / 3
+
+    // the following could be confused with spacing checks 
+    
+
+    this                 line              is              over           80          characters // Exceeds 80-char line limit (length: 96 )
+}
+
+void single_line_loops_check(){
+    // the following shouldn't pass 
+    if (condition) do something; // No single line loops or if statements.
+    else if (condition) my eyes are tired; // No single line loops or if statements.
+
+    // the following should pass 
+    if (condition) 
+        do something;
+    if (condition) {
+        do something;
+    }
+    if (condition)
+    {
+        do something;
+    } else if (condition) {
+        do something else; 
+    }
+    else {
+
+    }
+}
+
+void indent_check(){
+ 1 space // Incorrect indentation
+        check
+    if (this should pass)
+        this should also pass;
+  2 spaces  // Incorrect indentation
+}
+
+    this shouldn't pass index because index should be 0 outside the function  // Incorrect indentation
+
+// the following line is just 5 spaces and it shouldn't pass index 
+      // Incorrect indentation
+void and_or_not_check(){
+    for (this || can't && pass TWICE)  // Use "or" instead of "||" 
+        I ate too many oreos;
+    if (!I don't think this should pass) double fail should happen here; // Use "not" instead of "!"  // No single line loops or if statements.
+    else if (not fail) 
+        please pass; 
+    while (!pass)  // Use "not" instead of "!" 
+        this should fail;
+    function_call_that_should_work(&reference); 
+}

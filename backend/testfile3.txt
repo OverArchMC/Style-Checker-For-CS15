@@ -1,0 +1,154 @@
+//cs15 
+//imp of roster
+//name or wgatever
+//evil
+/*vhbcnmxhf
+bnvfcdhjf
+nvjfmckd,njf*/
+
+
+#include <iostream>
+#include "Student.h"
+
+using namespace std;
+
+int x = 2;
+
+static const int INITIAL_CAPACITY = 20;
+
+/* 
+ * constructor
+ * Purpose:     Initializes an empty roster
+ * Parameters:  None
+ * Returns:     None
+ * Effects:     Initizalizes an instance of Roster with capacity 
+ *              INITIAL_CAPACITY
+ */
+Roster::Roster()
+{
+        list     = new Student[INITIAL_CAPACITY];
+        capacity = INITIAL_CAPACITY;
+        size     = 0;
+
+
+
+        
+
+
+
+        This 
+
+
+        Function
+
+
+        Should 
+
+
+        Exceed 
+
+
+        The 
+
+
+        Thirty
+
+
+        Line 
+
+
+        Length 
+
+
+}
+
+void spacing_checks(){
+    // this comment shouldn't be read because it's a comment not code, except what if it's past 80 characters?
+    // the following few operations shouldn't pass spacing check 
+    x+1
+    x=1
+    x-2
+    x==1
+    x!=0
+    x/9
+    x%0
+    8*8
+
+    1+ 2
+    1< 2
+    1+=2
+    1<= 2
+    1 >=2
+    1 -101010
+    (1 + 2)/3
+
+    // the following operations should pass spacing check 
+    x->1
+    x == 2
+    x != 0
+    x / 8
+    x % 0
+    1 <= 2
+    1 += 2
+    1 -= 2
+    1 *= 0
+    x.1
+    x++
+    x--;
+    (1 + 2) / 3
+
+    // the following could be confused with spacing checks 
+    
+
+    this                 line              is              over           80          characters
+}
+
+void single_line_loops_check(){
+    // the following shouldn't pass 
+    if (condition) do something;
+    else if (condition) my eyes are tired;
+
+    // the following should pass 
+    if (condition) 
+        do something;
+    if (condition) {
+        do something;
+    }
+    if (condition)
+    {
+        do something;
+    } else if (condition) {
+        do something else; 
+        if(){
+                if(){
+                        
+                }
+        }
+    }
+    else {
+
+    }
+}
+
+void indent_check(){
+ 1 space
+        check
+    if (this should pass)
+        this should also pass;
+  2 spaces 
+}
+
+    this shouldn't pass index because index should be 0 outside the function 
+
+// the following line is just 5 spaces and it shouldn't pass index 
+     
+void and_or_not_check(){
+    for (this || can't && pass TWICE) 
+        I ate too many oreos;
+    if (!I don't think this should pass) double fail should happen here;
+    else if (not fail) 
+        please pass; 
+    while (!pass) 
+        this should fail;
+    function_call_that_should_work(&reference); 
+}
