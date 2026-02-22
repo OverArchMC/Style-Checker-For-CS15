@@ -172,7 +172,7 @@ void StyleChecker::checkFuncLength(int max_len) {
             int length = func.end - func.start;
             std::stringstream ss;
             ss << "// Exceeds " << max_len << " line limit (" << length << " lines)";
-            lines.insert(lines.begin() + func.start, ss.str());
+            lines[func.start] += ss.str();
         }
     }
 }
