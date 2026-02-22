@@ -1,197 +1,127 @@
-
 /*
-unit_test
-bnvfcdhjf
-nvjfmckd,njf*/
-
-
-#include <iostream>
-#include "Student.h"
-
-
-
-int x = 2;
-
-static const int INITIAL_CAPACITY = 20;
-
-/* 
- * constructor
- * Purpose:     Initializes an empty roster
- * Parameters:  None
- * Returns:     None
- * Effects:     Initizalizes an instance of Roster with capacity 
- *              INITIAL_CAPACITY
+ * ArrayList.cpp
+ * Matt Russell && Matt Champlin
+ * CS15 Lab 01: Unit Testing and ArrayLists
+ * 01/06/2021
+ * 09/12/2021 - updated for cs15 by mrussell
+ *
+ * Function definitions for the ArrayList class.
+ *
+ * TODO: fill in functions!
  */
 
+#include "ArrayList.h"
+#include <sstream>
 
-// 
-// purpose:
-// 
-// 
-void spacing_checks(){
-    // this comment shouldn't be read because it's a comment not code, except what if it's past 80 characters?
-    
-    // the following operations should pass spacing check 
-    x->1
-    x == 2
-    x != 0
-    x / 8
-    x % 0
-    1 <= 2
-    1 += 2
-    1 -= 2
-    1 *= 0
-    x.1
-    x++
-    x--;
-    (1 + 2) / 3
 
-    // the following could be confused with spacing checks 
-    
 
-    this                 line              is              over           80          characters
+/*
+ * name:      ArrayList default constructor
+ * purpose:   initialize an empty ArrayList
+ * arguments: none
+ * returns:   none
+ * effects:   numItems to 0 (also updates capacity and data array)
+ */
+ArrayList::ArrayList() {
+    numItems = 0;
+    capacity = 0;
+    buffer = nullptr;
 }
 
-
-/* 
- * purpose:
- * 
- */ 
-void single_line_loops_check(){
-    // the following shouldn't pass 
-    if (condition) do something;
-    else if (condition) my eyes are tired;
-
-    // the following should pass 
-    if (condition) 
-        do something;
-    if (condition) {
-        do something;
-    }
-    if (condition)
-    {
-        do something;
-    } else if (condition) {
-        do something else; 
-        if(){
-                if(){
-                        
-                }
-        }
-    }
-    else {
-
+/*
+ * name:      ArrayList destructor
+ * purpose:   free memory associated with the ArrayList
+ * arguments: none
+ * returns:   none
+ * effects:   frees memory allocated by Arraylist instances
+ */
+ArrayList::~ArrayList() {
+    for(int i = 0; i < numItems; i++){
+        delete *buffer;
     }
 }
 
-
-/* 
- * Purpose:
- * 
- */ 
-void indent_check(){
- 1 space
-        check
-    if (this should pass)
-        this should also pass;
-  2 spaces 
+/*
+ * name:      size
+ * purpose:   determine the number of items in the ArrayList
+ * arguments: none
+ * returns:   number of elements currently stored in the ArrayList
+ * effects:   none
+ */
+int ArrayList::size() const {
+    return numItems; /* Placeholder (remove when you implement this!) */
 }
 
-    this shouldn't pass index because index should be 0 outside the function 
-
-// the following line is just 5 spaces and it shouldn't pass index 
-    
-
-void and_or_not_check(){
-    for (this || can't && pass TWICE) 
-        I ate too many oreos;
-    if (!I don't think this should pass) double fail should happen here;
-    else if (not fail) 
-        please pass; 
-    while (!pass) 
-        this should fail;
-    function_call_that_should_work(&reference); 
+/*
+ * name:      isEmpty
+ * purpose:   determines if the ArrayList is empty or not
+ * arguments: none
+ * returns:   true if ArrayList contains no elements, false otherwise
+ * effects:   none
+ */
+bool ArrayList::isEmpty() const {
+    return (numItems == 0); /* Placeholder (remove when you implement this!) */
 }
 
-void 30_line_check(){
-    if (a very very long if statement that could be mistaken for a function) {
-        a 
-        very 
-        very 
-        very 
-        very 
-        very 
-        very 
-        very 
-        very
-        very 
-        very
-        very 
-        very 
-        very 
-        very 
-        very
-        very 
-        very 
-        very 
-        very 
-        very
-        very 
-        very 
-        very 
-        very 
-        very
-        very 
-        very 
-        very 
-        very 
-        very
-        very
-        very
-        long 
-        if 
-    }
+/*
+ * name:      toString
+ * purpose:   turns the array into a string and returns it
+ * arguments: none
+ * returns:   a string representation of the array
+ * effects:   none
+ */
+std::string ArrayList::toString() const {
+    std::stringstream ss;
+    ss << "[";
+    /* TODO: Complete the rest of the print function by adding each element of
+     *       the ArrayList to the stringstream. Note that you can use this
+     *       stringstream object, ss, just as you would with std::cout. The
+     *       rest of the operations necessary are provided for you. The format
+     *       is: [1,2,3] for an ArrayList of 3 ints whose values are 1, 2 and 3
+     *       We've given you the opening and closing braces.
+     */
+    ss << "]";
+    return ss.str();
 }
 
-// purpose: 
-void edge_case_for_functions(){
-    std::cout << "what if I have curly braces { here }";
+/*
+ * name:      pushAtBack
+ * purpose:   push the provided integer into the back of the ArrayList
+ * arguments: an integer to add to the back of the list
+ * returns:   none
+ * effects:   increases num elements of ArrayList by 1,
+ *            adds element to list
+ */
+void ArrayList::pushAtBack(int elem) {}
+
+/*
+ * name:      expand
+ * purpose:   increase the capacity of the ArrayList
+ * arguments: none
+ * returns:   none
+ * effects:   creates new, larger array on heap, copies over elements,
+ *            and recycles the old array
+ */
+void ArrayList::expand() {}
+
+/*
+ * name:      find - JFFE
+ * purpose:   determine if the provided integer is within the ArrayList
+ * arguments: an integer to find
+ * returns:   returns true if x is in the ArrayList, false otherwise
+ * effects:   none
+ */
+bool ArrayList::find(int to_find) const {
+    return false; /* Placeholder (remove when you implement this!) */
 }
 
-// if
-void indentation_edge_cases(){
-    // previous line ends with ')' -> current line indentation should be ignored
-    if (condition)
-            body_should_not_trigger_indent_error;
 
-    // previous line ends with '+' -> continuation indentation should be ignored
-    very_long_expression = left_side +
-                right_side +
-        final_piece;
-
-    // previous line ends with ',' -> continuation indentation should be ignored
-    function_call(arg1,
-              arg2,
-        arg3);
-
-    // previous line ends with ';' -> indentation should be checked (should fail)
-    done = true;
-          this_line_should_trigger_indent_error;
-
-    // previous line ends with '{' -> normal indent check still applies
-    if (another_condition) {
-      this_line_should_trigger_indent_error_too;
-    }
-
-    // what if it's a curly brace in a string 
-    std::cout << "Train or PassengerQueue or whatever { stuff here }";
-}
-
-for (int i = 0; i < sth; i++) shouldn't work;
-for (int i = 0; i < sth; i++) shouldn't work; 
-for (int i = 0; i < sth; i++) 
-    should work;
-
-void check_function(){
-    assert(test_list.size() == 10);
-}
+/*
+ * name:      popFromBack - JFFE
+ * purpose:   remove the last item from the ArrayList
+ * arguments: none
+ * returns:   none
+ * effects:   decreases num items of ArrayList by 1,
+ *            removes the last item from the list
+ */
+void ArrayList::popFromBack() {}
