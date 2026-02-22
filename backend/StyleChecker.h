@@ -19,7 +19,13 @@ public:
     void parseFunctions();
     void checkFuncLength(int max_len);
 
+    struct Comment {
+        int start;
+        int end;
+    }
+
     struct Function {
+        Comment contract;
         bool too_long = false;
         int start;
         int end;

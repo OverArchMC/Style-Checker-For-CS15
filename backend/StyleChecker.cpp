@@ -29,7 +29,7 @@ void StyleChecker::printLines(std::ofstream &output) {
     }
 }
 
-void StyleChecker::oncePerFile(){
+void StyleChecker::oncePerFile() {
     // these variables are for standard namespace 
     bool have_namespace = false; 
     bool have_main = false; 
