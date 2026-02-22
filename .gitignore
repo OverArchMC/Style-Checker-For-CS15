@@ -1,0 +1,10 @@
+frontend/node_modules/
+frontend/dist/
+frontend/uploads/
+backend/*.o
+backend/checker
+backend/checker.exe
+backend/a.out
+backend/temp_out.txt
+*.log
+.DS_Store
