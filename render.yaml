@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: style-checker-for-cs15
+    runtime: node
+    plan: free
+    buildCommand: npm --prefix frontend install && npm --prefix frontend run build:all
+    startCommand: npm --prefix frontend run start
+    envVars:
+      - key: NODE_VERSION
+        value: 20

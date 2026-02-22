@@ -52,7 +52,7 @@ function resolveRuntimePathEntries(): string[] {
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
   // Ensure uploads directory exists
   const uploadDir = path.join(__dirname, 'uploads');
@@ -168,6 +168,13 @@ async function startServer() {
   } else {
     // Production static file serving (if built)
     app.use(express.static(path.join(__dirname, 'dist')));
+
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api')) {
+        return next();
+      }
+      return res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    });
   }
 
   app.listen(PORT, '0.0.0.0', () => {
