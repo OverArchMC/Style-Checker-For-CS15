@@ -1,0 +1,197 @@
+
+/*
+unit_test
+bnvfcdhjf
+nvjfmckd,njf*/
+
+
+#include <iostream>
+#include "Student.h"
+
+
+
+int x = 2;
+
+static const int INITIAL_CAPACITY = 20;
+
+/* 
+ * constructor
+ * Purpose:     Initializes an empty roster
+ * Parameters:  None
+ * Returns:     None
+ * Effects:     Initizalizes an instance of Roster with capacity 
+ *              INITIAL_CAPACITY
+ */
+
+
+// 
+// purpose:
+// 
+// 
+void spacing_checks(){
+    // this comment shouldn't be read because it's a comment not code, except what if it's past 80 characters?
+    
+    // the following operations should pass spacing check 
+    x->1
+    x == 2
+    x != 0
+    x / 8
+    x % 0
+    1 <= 2
+    1 += 2
+    1 -= 2
+    1 *= 0
+    x.1
+    x++
+    x--;
+    (1 + 2) / 3
+
+    // the following could be confused with spacing checks 
+    
+
+    this                 line              is              over           80          characters
+}
+
+
+/* 
+ * purpose:
+ * 
+ */ 
+void single_line_loops_check(){
+    // the following shouldn't pass 
+    if (condition) do something;
+    else if (condition) my eyes are tired;
+
+    // the following should pass 
+    if (condition) 
+        do something;
+    if (condition) {
+        do something;
+    }
+    if (condition)
+    {
+        do something;
+    } else if (condition) {
+        do something else; 
+        if(){
+                if(){
+                        
+                }
+        }
+    }
+    else {
+
+    }
+}
+
+
+/* 
+ * Purpose:
+ * 
+ */ 
+void indent_check(){
+ 1 space
+        check
+    if (this should pass)
+        this should also pass;
+  2 spaces 
+}
+
+    this shouldn't pass index because index should be 0 outside the function 
+
+// the following line is just 5 spaces and it shouldn't pass index 
+    
+
+void and_or_not_check(){
+    for (this || can't && pass TWICE) 
+        I ate too many oreos;
+    if (!I don't think this should pass) double fail should happen here;
+    else if (not fail) 
+        please pass; 
+    while (!pass) 
+        this should fail;
+    function_call_that_should_work(&reference); 
+}
+
+void 30_line_check(){
+    if (a very very long if statement that could be mistaken for a function) {
+        a 
+        very 
+        very 
+        very 
+        very 
+        very 
+        very 
+        very 
+        very
+        very 
+        very
+        very 
+        very 
+        very 
+        very 
+        very
+        very 
+        very 
+        very 
+        very 
+        very
+        very 
+        very 
+        very 
+        very 
+        very
+        very 
+        very 
+        very 
+        very 
+        very
+        very
+        very
+        long 
+        if 
+    }
+}
+
+// purpose: 
+void edge_case_for_functions(){
+    std::cout << "what if I have curly braces { here }";
+}
+
+// if
+void indentation_edge_cases(){
+    // previous line ends with ')' -> current line indentation should be ignored
+    if (condition)
+            body_should_not_trigger_indent_error;
+
+    // previous line ends with '+' -> continuation indentation should be ignored
+    very_long_expression = left_side +
+                right_side +
+        final_piece;
+
+    // previous line ends with ',' -> continuation indentation should be ignored
+    function_call(arg1,
+              arg2,
+        arg3);
+
+    // previous line ends with ';' -> indentation should be checked (should fail)
+    done = true;
+          this_line_should_trigger_indent_error;
+
+    // previous line ends with '{' -> normal indent check still applies
+    if (another_condition) {
+      this_line_should_trigger_indent_error_too;
+    }
+
+    // what if it's a curly brace in a string 
+    std::cout << "Train or PassengerQueue or whatever { stuff here }";
+}
+
+for (int i = 0; i < sth; i++) shouldn't work;
+for (int i = 0; i < sth; i++) shouldn't work; 
+for (int i = 0; i < sth; i++) 
+    should work;
+
+void check_function(){
+    assert(test_list.size() == 10);
+}
