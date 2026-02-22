@@ -9,8 +9,7 @@ static bool hasFileHeader(const std::vector<std::string>& lines);
 
 StyleChecker::StyleChecker(std::ifstream &input, std::ofstream &output) {
    readLines(input, output);
-   oncePerFile();
-   printLines(output);
+   parseFunctions();
 }
 
 void StyleChecker::readLines(std::ifstream &input, std::ofstream &output) {
@@ -104,6 +103,66 @@ static bool hasFileHeader(const std::vector<std::string>& lines) {
         }
     }
     return false;
+}
+
+void StyleChecker::parseFunctions() {
+    int func_start;
+    int func_end;
+    int num_lines = lines.size();
+    for (int i = 0; i < num_lines; i++) {
+        std::string curr_line = lines[i];
+        if (isFunctionStart(curr_line)) {
+            func_start = i;
+            func_end = findFunctionEnd(func_start);
+            if (func_end != -1) {
+                StyleChecker::Function func;
+                func.start = func_start;
+                func.end = func_end;
+                functions.push_back(func);
+            }
+        }
+    }
+}
+    
+bool StyleChecker::isFunctionStart(const std::string& line) {
+    // Matches patterns like:
+    // int foo(...)
+    // std::string MyClass::myMethod(int a, double b)
+    // template functions, const, static, virtual, etc.
+    std::regex funcPattern(
+        "^\\s*" // disregards leading whitespace
+        "(?:(?:inline|static|virtual|explicit|constexpr|const|friend|extern)\\s+)*" // matches these expressions
+        "(?:[\\w\\s*&:<>,]+?\\s+)?"   // return type is optional for constructors
+        "([\\w:~]+)\\s*" // Matches scope resolution operator and destructor
+        "\\([^)]*\\)" // Matches parameter list
+        "(?:\\s*(?:const|noexcept|override|final))*" // Matches trailing quantifiers
+        "\\s*\\{?\\s*$" // Optional opening curly brace
+    );
+
+    return std::regex_match(line, funcPattern);
+}
+
+int StyleChecker::findFunctionEnd(int startingLine) {
+    int balance = 0;
+    bool started = false;
+
+    int num_lines = lines.size();
+    
+    for (int i = startingLine; i < num_lines; i++) {
+        for (char c : lines[i]) {
+            if (c == '{') {
+                started = true;
+                balance++;
+            }
+            else if (c == '}') {
+                balance--;
+            }
+            if (balance == 0 and started) {
+                return i;
+            }
+        }
+    }
+    return -1;
 }
 
 void StyleChecker::checkFuncLength(int max_len) {
@@ -283,4 +342,6 @@ void StyleChecker::run() {
         argumentSpacing(i);
         indentation(i, &indent_level);
     }
+    oncePerFile();
+    checkFuncLength(30);
 }

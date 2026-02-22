@@ -22,7 +22,7 @@ public:
     struct Comment {
         int start;
         int end;
-    }
+    };
 
     struct Function {
         Comment contract;
