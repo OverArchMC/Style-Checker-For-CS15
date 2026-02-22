@@ -1,5 +1,4 @@
-/*  // Where is your file header? (filename, author, date, file purpose)
- * unit_tests.h
+/* unit_tests
  *
  * CS 15 homework 1
  * by Tyler Calabrese, January 2021
@@ -20,7 +19,7 @@
 #include <stdexcept>
 
 using namespace std;
- // Shouldn't have std namespace
+
 #include "CharArrayList.h"
 
 /********************************************************************\
@@ -36,7 +35,7 @@ using namespace std;
  */
 
 // Tests that the default constructor correctly makes an AL.
-// Afterwards, size should be 0. // Add function contract
+// Afterwards, size should be 0.
 void default_constructor() {
     CharArrayList list;
     assert(list.isEmpty());
@@ -44,7 +43,7 @@ void default_constructor() {
 
 // Tests that the single character constructor correctly makes an AL.
 // Afterwards, size should be 1, and the first element should be the one
-// we passed to the constructor. // Add function contract
+// we passed to the constructor.
 void single_char_constructor() {
     CharArrayList list('a');
     assert(list.size() == 1);
@@ -54,32 +53,32 @@ void single_char_constructor() {
 // Tests that the array constructor correctly makes an AL from an array with
 // many characters.
 // Afterwards, size should be the size we passed to the constructor, and it
-// should contain the characters we passed to the constructor in the array. // Add function contract
+// should contain the characters we passed to the constructor in the array.
 void array_constructor_many() {
     // Initialze list with many elements
-    char characters[4] = {'w', 'o', 'r', 'd'}; // Incorrect indentation
+    char characters[4] = {'w', 'o', 'r', 'd'};
     CharArrayList list(characters, 4);
     assert(list.size() == 4); // Check matching size
     // Check matching chars
-    for (int i = 0; i < list.size(); i++) { // No single line loops or if statements.
+    for (int i = 0; i < list.size(); i++) {
         assert(list.elementAt(i) == characters[i]);
     }
 }
 
 // Tests that the array constructor correctly makes an AL from an empty array.
-// Afterwards, size should be 0. // Add function contract
+// Afterwards, size should be 0.
 void array_constructor_empty() {
     // Initialize an empty list using the array constructor
-    char characters[] = {}; // Incorrect indentation
+    char characters[] = {};
     CharArrayList list(characters, 0);
-    assert(list.isEmpty()); // Check for emptiness // No single line loops or if statements.
+    assert(list.isEmpty()); // Check for emptiness
 }
 
 // Tests that the array constructor correctly makes an AL from an array of
 // length 1.
-// Afterwards, size should be 1. // Add function contract
+// Afterwards, size should be 1.
 void array_constructor_single() {
-    char characters[1] = {'a'}; // Incorrect indentation
+    char characters[1] = {'a'};
     CharArrayList list(characters, 1);
     assert(list.size() == 1);
 }
@@ -87,45 +86,45 @@ void array_constructor_single() {
 // Tests that the array constructor correctly makes an AL from a size that is
 // less than the length of the array.
 // Afterwards, size should be the length of the array and it should contain the
-// characters we passed to the constructor. // Add function contract
+// characters we passed to the constructor.
 void array_constructor_too_small() {
     // Initialize a list from a array that is larger than specified
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 2);
-    assert(list.size() == 2); // Check for proper size // No single line loops or if statements.
+    assert(list.size() == 2); // Check for proper size
     // Check that all the characters are the same
-    for (int i = 0; i < list.size(); i++) { // No single line loops or if statements.
+    for (int i = 0; i < list.size(); i++) {
         assert(list.elementAt(i) == characters[i]);
     }
 }
 
 // Tests that the array constructor correctly makes an AL from a size that is
 // zero.
-// Afterwards, size should be 0. // Add function contract
+// Afterwards, size should be 0.
 void array_constructor_zero() {
-    char characters[] = {}; // Incorrect indentation
+    char characters[] = {};
     CharArrayList list(characters, 0);
     assert(list.isEmpty());
 }
 
 // Tests that the copy constructor correctly makes an AL from another AL with
 // many elements.
-// Afterwards, the sizes and every element should be equal. // Add function contract
+// Afterwards, the sizes and every element should be equal.
 void copy_constructor_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list1(characters, 3);
     CharArrayList list2(list1); // Copy it
     assert(list1.size() == list2.size()); // Check matching size
     // Check for matching characters
-    for (int i = 0; i < list1.size(); i++) { // No single line loops or if statements.
+    for (int i = 0; i < list1.size(); i++) {
         assert(list1.elementAt(i) == list2.elementAt(i));
     }
 }
 
 // Tests that the copy constructor correctly makes an AL from another AL that
 // is empty.
-// Afterwards, the size should be 0. // Add function contract
+// Afterwards, the size should be 0.
 void copy_constructor_emtpy() {
     // Initialize an empty list
     CharArrayList list1;
@@ -134,48 +133,48 @@ void copy_constructor_emtpy() {
 }
 
 
-// Tests the correct size for an AL that has many elements. // Add function contract
+// Tests the correct size for an AL that has many elements.
 void size_many_elements() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
     assert(list.size() == 3); // Confirm its size
 }
 
-// Tests the correct size for an AL that has is empty. // Add function contract
+// Tests the correct size for an AL that has is empty.
 void size_empty() {
     CharArrayList list; // Initialize an empty list
     assert(list.size() == 0);
 }
 
-// Tests correct emptiness // Add function contract
+// Tests correct emptiness
 void isEmpty_correct() {
     CharArrayList list; // Initialize an empty list
     assert(list.isEmpty());
 }
 
-// Tests correct non emptiness // Add function contract
+// Tests correct non emptiness
 void isEmpty_incorrect() {
     CharArrayList list('a'); // Initalize a not empty list
     assert(not list.isEmpty());
 }
 
 // Tests that the = operator copies an AL with many characters
-// Afterwards, the sizes should be equal and each char should match // Add function contract
+// Afterwards, the sizes should be equal and each char should match
 void equals_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list1(characters, 3);
     CharArrayList list2 = list1; // Use the equals operator to copy
     assert(list2.size() == 3);
     // Check matching characters
-    for (int i = 0; i < list1.size(); i++) { // No single line loops or if statements.
+    for (int i = 0; i < list1.size(); i++) {
         assert(list1.elementAt(i) == list2.elementAt(i));
     }
 }
 
 // Tests that the = operator copies ALs with one character
-// Afterwards, the sizes should be equal to one and the char should match // Add function contract
+// Afterwards, the sizes should be equal to one and the char should match
 void equals_one() {
     // Initialize a 1-element list
     CharArrayList list1('a');
@@ -186,7 +185,7 @@ void equals_one() {
 }
 
 // Tests that the = operator copies ALs with many characters
-// Afterwards, the size should be equal to 0 // Add function contract
+// Afterwards, the size should be equal to 0
 void equals_empty() {
     // Initialize an empty list
     CharArrayList list1;
@@ -195,20 +194,20 @@ void equals_empty() {
 }
 
 // Tests that the = operator makes a deep copy instead of a shallow one
-// After a change to the copied AL, the copy AL should remain the same // Add function contract
+// After a change to the copied AL, the copy AL should remain the same
 void equals_deep_copy() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list1(characters, 3);
     CharArrayList list2 = list1; // Copy it uisng =
     list1.replaceAt('t', 2); // Change list1
-    assert(list2.elementAt(2) == 'd'); // Check for no change in list2 // No single line loops or if statements.
+    assert(list2.elementAt(2) == 'd'); // Check for no change in list2
 }
 
-// Tests replaceAt a valid index // Add function contract
+// Tests replaceAt a valid index
 void replaceAt_valid() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
     // Replace an element
     list.replaceAt('f', 0);
@@ -216,7 +215,7 @@ void replaceAt_valid() {
     assert(list.elementAt(0) == 'f');
 }
 
-// Tests replaceAt an invalid index // Add function contract
+// Tests replaceAt an invalid index
 void replaceAt_invalid() {
     bool range_error_thrown = false; // To store if there is an error thrown
     string error_message = ""; // To store the resulting error message
@@ -224,7 +223,7 @@ void replaceAt_invalid() {
     try {
         // replaceAt an out-of-bounds index
         list.replaceAt('a', 4);
-    } // Add function contract
+    }
     catch (const range_error &e) {
         // if replaceAt is correctly implemented, a range_error will be thrown,
         // and we will end up here
@@ -237,41 +236,41 @@ void replaceAt_invalid() {
     assert(error_message == "index (4) not in range [0..1)");
 }
 
-// Tests elementAt the first index in an AL with many chars // Add function contract
+// Tests elementAt the first index in an AL with many chars
 void elementAt_first_of_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
-    assert(list.elementAt(0) == 'a'); // Check for proper first element // No single line loops or if statements.
+    assert(list.elementAt(0) == 'a'); // Check for proper first element
 }
 
-// Tests elementAt the last index in an AL with many chars // Add function contract
+// Tests elementAt the last index in an AL with many chars
 void elementAt_last_of_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
-    assert(list.elementAt(2) == 'd'); // Check for proper last element // No single line loops or if statements.
+    assert(list.elementAt(2) == 'd'); // Check for proper last element
 }
 
-// Tests elementAt for an AL with only one char // Add function contract
+// Tests elementAt for an AL with only one char
 void elementAt_one_char() {
     // Initialize a 1-element list
     CharArrayList list('a');
-    assert(list.elementAt(0) == 'a'); // Check for proper element // No single line loops or if statements.
+    assert(list.elementAt(0) == 'a'); // Check for proper element
 }
 
 // Tests elementAt a negative index
 // Attempts to access an element at a negative index
 // This should result in a range error being thrown with the appropriate
-// message // Add function contract
+// message
 void elementAt_negative() {
     bool range_error_thrown = false; // To store if a range error is thrown
     string error_message = ""; // To store the resulting error message
     CharArrayList list('a');
     try {
         // elementAt a negative index
-        char a = list.elementAt(-10); // Add spaces around operator '-'
-    } // Add function contract
+        char a = list.elementAt(-10);
+    }
     catch (const range_error &e) {
         // if elementAt is correctly implemented, a range_error will be thrown,
         // and we will end up here
@@ -281,13 +280,13 @@ void elementAt_negative() {
 
     // out here, we make our assertions
     assert(range_error_thrown);
-    assert(error_message == "index (-10) not in range [0..1)"); // Add spaces around operator '-'
+    assert(error_message == "index (-10) not in range [0..1)");
 }
 
 // Tests elementAt a too large index
 // Attempts to access an element at a too large index
 // This should result in a range error being thrown with the appropriate
-// message // Add function contract
+// message
 void elementAt_too_large() {
     bool range_error_thrown = false; // To store whether a range error is thrown
     string error_message = ""; // To store the resulting message
@@ -296,7 +295,7 @@ void elementAt_too_large() {
     try {
         // elementAt a too large index
         char a = list.elementAt(2);
-    } // Add function contract
+    }
     catch (const range_error &e) {
         // if elementAt is correctly implemented, a range_error will be thrown,
         // and we will end up here
@@ -309,30 +308,30 @@ void elementAt_too_large() {
     assert(error_message == "index (2) not in range [0..1)");
 }
 
-// Tests toString on an AL with many elements // Add function contract
+// Tests toString on an AL with many elements
 void toString_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
     assert(list.toString() == "[CharArrayList of size 3 <<and>>]");
 }
 
-// Tests toString on an empty AL // Add function contract
+// Tests toString on an empty AL
 void toString_empty() {
     // Initialize an empty list
     CharArrayList list;
     assert(list.toString() == "[CharArrayList of size 0 <<>>]");
 }
 
-// Tests toString on an AL with many elements // Add function contract
+// Tests toString on an AL with many elements
 void toReverseString_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
     assert(list.toReverseString() == "[CharArrayList of size 3 <<dna>>]");
 }
 
-// Tests toString on an empty AL // Add function contract
+// Tests toString on an empty AL
 void toReverseString_empty() {
     // Initialize an empty list
     CharArrayList list;
@@ -340,11 +339,11 @@ void toReverseString_empty() {
 }
 
 // Tests pushAtBack many many times
-// Afterwards the AL should have the proper number of elements // Add function contract
+// Afterwards the AL should have the proper number of elements
 void pushAtBack_repeated() {
     CharArrayList list;
     // Push 100 elements
-    for (int i = 0; i < 100; i++) { // No single line loops or if statements.
+    for (int i = 0; i < 100; i++) {
         list.pushAtBack('a');
     }
     // Check for proper size and elements
@@ -356,29 +355,29 @@ void pushAtBack_repeated() {
 
 // Tests pushAtBack on an AL with many elements
 // Afterwards, size should be one greater than it was and the last char of the
-// AL should be the one we added. // Add function contract
+// AL should be the one we added.
 void pushAtBack_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
     list.pushAtBack('s');
-    assert(list.size() == 4); // Check for incremented size // No single line loops or if statements.
-    assert(list.elementAt(3) == 's'); // Check for added char // No single line loops or if statements.
+    assert(list.size() == 4); // Check for incremented size
+    assert(list.elementAt(3) == 's'); // Check for added char
 }
 
 // Tests pushAtBack on an AL with no elements
-// Afterwards, size should be one and the AL be the char we added. // Add function contract
+// Afterwards, size should be one and the AL be the char we added.
 void pushAtBack_empty() {
     // Initialize an empty list
     CharArrayList list;
     list.pushAtBack('s');
-    assert(list.size() == 1); // Check for incremented size // No single line loops or if statements.
-    assert(list.elementAt(0) == 's'); // Check for added char // No single line loops or if statements.
+    assert(list.size() == 1); // Check for incremented size
+    assert(list.elementAt(0) == 's'); // Check for added char
 }
 
 // Tests expand on an AL that undergoes two expansions
 // Pushes 3 items onto an empty AL
-// Afterwards, the size should be 3 // Add function contract
+// Afterwards, the size should be 3
 void expand_twice() {
     CharArrayList list;
     list.pushAtBack('a'); // Expands once
@@ -390,15 +389,15 @@ void expand_twice() {
 }
 
 // Tests popFromBack many many times
-// Afterwards the AL should have the proper number of elements // Add function contract
+// Afterwards the AL should have the proper number of elements
 void popFromBack_repeated() {
     CharArrayList list;
     // Push 100 elements
-    for (int i = 0; i < 100; i++) { // No single line loops or if statements.
+    for (int i = 0; i < 100; i++) {
         list.pushAtBack('a');
     }
     // Pop 100 elements
-    for (int i = 0; i < 100; i++) { // No single line loops or if statements.
+    for (int i = 0; i < 100; i++) {
         list.popFromBack();
     }
     // Check for emptiness
@@ -407,27 +406,27 @@ void popFromBack_repeated() {
 
 
 // Tests popFromBack on an AL with many elements
-// Afterwards, the size should be one less than it was to begin with // Add function contract
+// Afterwards, the size should be one less than it was to begin with
 void popFromBack_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
     list.popFromBack();
-    assert(list.size() == 2); // Check for decremented size // No single line loops or if statements.
+    assert(list.size() == 2); // Check for decremented size
 }
 
 // Tests popFromBack on an AL with one element
-// Afterwards, the size should be 0 // Add function contract
+// Afterwards, the size should be 0
 void popFromBack_one() {
     // Initialize a 1-element list
     CharArrayList list('a');
     list.popFromBack();
-    assert(list.size() == 0); // Check for decremented size // No single line loops or if statements.
+    assert(list.size() == 0); // Check for decremented size
 }
 
 // Tests popFromBack on an empty AL
 // Attempts to remove the last element of an empty AL
-// This should result in an runtime_error being raised // Add function contract
+// This should result in an runtime_error being raised
 void popFromBack_empty() {
     bool runtime_error_thrown = false;
     string error_message;
@@ -435,7 +434,7 @@ void popFromBack_empty() {
     try {
         // popFromBack of the list
         list.popFromBack();
-    } // Add function contract
+    }
     catch (const runtime_error &e) {
         // if popFromBack is correctly implemented, a runtime_error will be
         // thrown, and we will end up here
@@ -449,11 +448,11 @@ void popFromBack_empty() {
 }
 
 // Tests pushAtFront many many times
-// Afterwards the AL should have the proper number of elements // Add function contract
+// Afterwards the AL should have the proper number of elements
 void pushAtFront_repeated() {
     CharArrayList list;
     // Push 100 elements
-    for (int i = 0; i < 100; i++) { // No single line loops or if statements.
+    for (int i = 0; i < 100; i++) {
         list.pushAtFront('a');
     }
     // Check for proper size and elements
@@ -466,30 +465,30 @@ void pushAtFront_repeated() {
 // Tests pushAtFront on an AL with many elements
 // Attempts to add a character to the front of an AL with many elements
 // Afterwards, the size should be one greater and the first element should be
-// the one we added. // Add function contract
+// the one we added.
 void pushAtFront_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
     list.pushAtFront('l');
-    assert(list.size() == 4); // Check for incremented size // No single line loops or if statements.
-    assert(list.elementAt(0) == 'l'); // Check for added char // No single line loops or if statements.
+    assert(list.size() == 4); // Check for incremented size
+    assert(list.elementAt(0) == 'l'); // Check for added char
 }
 
 // Tests pushAtFront on an empty AL
 // Attempts to add a character to the front of an empty AL
-// Afterwards, the size should be one and the AL should be the char we added // Add function contract
+// Afterwards, the size should be one and the AL should be the char we added
 void pushAtFront_empty() {
     CharArrayList list; // An empty list
     list.pushAtFront('l');
-    assert(list.size() == 1); // Check for incremented size // No single line loops or if statements.
-    assert(list.elementAt(0) == 'l'); // Check for added char // No single line loops or if statements.
+    assert(list.size() == 1); // Check for incremented size
+    assert(list.elementAt(0) == 'l'); // Check for added char
 }
 
 
 // Tests correct insertion into an empty AL.
 // Afterwards, size should be 1 and element at index 0
-// should be the element we inserted. // Add function contract
+// should be the element we inserted.
 void insertAt_empty_correct() {
     CharArrayList test_list;
     test_list.insertAt('a', 0);
@@ -499,7 +498,7 @@ void insertAt_empty_correct() {
 
 // Tests incorrect insertion into an empty AL.
 // Attempts to call insertAt for index larger than 0.
-// This should result in an std::range_error being raised. // Add function contract
+// This should result in an std::range_error being raised.
 void insertAt_empty_incorrect() {
     // var to track whether range_error is thrown
     bool range_error_thrown = false;
@@ -511,7 +510,7 @@ void insertAt_empty_incorrect() {
     try {
         // insertAt for out-of-range index
         test_list.insertAt('a', 42);
-    } // Add function contract
+    }
     catch (const std::range_error &e) {
         // if insertAt is correctly implemented, a range_error will be thrown,
         // and we will end up here
@@ -524,7 +523,7 @@ void insertAt_empty_incorrect() {
     assert(error_message == "index (42) not in range [0..0]");
 }
 
-// Tests correct insertAt for front of 1-element list. // Add function contract
+// Tests correct insertAt for front of 1-element list.
 void insertAt_front_singleton_list() {
     // initialize 1-element list
     CharArrayList test_list('a');
@@ -537,7 +536,7 @@ void insertAt_front_singleton_list() {
     assert(test_list.elementAt(1) == 'a');
 }
 
-// Tests correct insertAt for back of 1-element list. // Add function contract
+// Tests correct insertAt for back of 1-element list.
 void insertAt_back_singleton_list() {
     // initialize 1-element list
     CharArrayList test_list('a');
@@ -552,26 +551,26 @@ void insertAt_back_singleton_list() {
 
 // Tests calling insertAt for a large number of elements.
 // Not only does this test insertAt, it also checks that
-// array expansion works correctly. // Add function contract
+// array expansion works correctly.
 void insertAt_many_elements() {
     CharArrayList test_list;
 
     // insert 1000 elements
-    for (int i = 0; i < 1000; i++) { // No single line loops or if statements.
+    for (int i = 0; i < 1000; i++) {
         // always insert at the back of the list
         test_list.insertAt('a', i);
     }
 
     assert(test_list.size() == 1000);
 
-    for (int i = 0; i < 1000; i++) { // No single line loops or if statements.
+    for (int i = 0; i < 1000; i++) {
         assert(test_list.elementAt(i) == 'a');
     }
 }
 
-// Tests insertion into front of a larger list // Add function contract
+// Tests insertion into front of a larger list
 void insertAt_front_large_list() {
-    char test_arr[9] = {'a', 'b', 'c', 'z', 'd', 'e', 'f', 'g', 'h'}; // Incorrect indentation
+    char test_arr[9] = {'a', 'b', 'c', 'z', 'd', 'e', 'f', 'g', 'h'};
     CharArrayList test_list(test_arr, 9);
 
     test_list.insertAt('y', 0);
@@ -581,22 +580,22 @@ void insertAt_front_large_list() {
     assert(test_list.toString() == "[CharArrayList of size 10 <<yabczdefgh>>]");
 }
 
-// Tests insertion into the back of a larger list // Add function contract
+// Tests insertion into the back of a larger list
 void insertAt_back_large_list() {
-    char test_arr[10] = {'y', 'a', 'b', 'c', 'z', 'd', 'e', 'f', 'g', 'h'}; // Incorrect indentation
+    char test_arr[10] = {'y', 'a', 'b', 'c', 'z', 'd', 'e', 'f', 'g', 'h'};
     CharArrayList test_list(test_arr, 10);
 
     test_list.insertAt('x', 10);
 
     assert(test_list.size() == 11);
     assert(test_list.elementAt(10) == 'x');
-    assert(test_list.toString() == // Add spaces around operator '='
-           "[CharArrayList of size 11 <<yabczdefghx>>]"); // Incorrect indentation
+    assert(test_list.toString() ==
+           "[CharArrayList of size 11 <<yabczdefghx>>]");
 }
 
-// Tests insertion into the middle of a larger list // Add function contract
+// Tests insertion into the middle of a larger list
 void insertAt_middle_large_list() {
-    char test_arr[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'}; // Incorrect indentation
+    char test_arr[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     CharArrayList test_list(test_arr, 8);
 
     test_list.insertAt('z', 3);
@@ -606,9 +605,9 @@ void insertAt_middle_large_list() {
     assert(test_list.toString() == "[CharArrayList of size 9 <<abczdefgh>>]");
 }
 
-// Tests out-of-range insertion for a non-empty list. // Add function contract
+// Tests out-of-range insertion for a non-empty list.
 void insertAt_nonempty_incorrect() {
-    char test_arr[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'}; // Incorrect indentation
+    char test_arr[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     CharArrayList test_list(test_arr, 8);
 
     // var to track whether range_error is thrown
@@ -632,17 +631,17 @@ void insertAt_nonempty_incorrect() {
 // Attempts to insert an element with the smallest ASCII value in the AL
 // Afterwards, the size of the AL should have increased by one, the first
 // element should be the one we inserted, and each of the other elements should
-// have shifted right by one index. // Add function contract
+// have shifted right by one index.
 void insertInOrder_front() {
     // Initialize list with many elements
-    char characters[3] = {'b', 'c', 'd'}; // Incorrect indentation
+    char characters[3] = {'b', 'c', 'd'};
     CharArrayList list(characters, 3);
     // Insert a character meant to be at the front
     list.insertInOrder('a');
     // Check for excpected conditions
     assert(list.size() == 4);
     assert(list.elementAt(0) == 'a');
-    for (int i = 0; i < 3; i++) { // All elements should be shifted to the right // No single line loops or if statements.
+    for (int i = 0; i < 3; i++) { // All elements should be shifted to the right
         assert(list.elementAt(i + 1) == characters[i]);
     }
 }
@@ -652,10 +651,10 @@ void insertInOrder_front() {
 // the AL
 // Afterwards, the size of the AL should have increased by one, the inserted
 // element should be in the proper index, and each of rightward other elements
-// should have shifted right by one index. // Add function contract
+// should have shifted right by one index.
 void insertInOrder_middle() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'b', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'b', 'd'};
     CharArrayList list(characters, 3);
     // Insert a char meant to be in the middle
     list.insertInOrder('c');
@@ -672,10 +671,10 @@ void insertInOrder_middle() {
 // the AL
 // Afterwards, the size of the AL should have increased by one, the inserted
 // element should be in the proper index, and each of rightward other elements
-// should have shifted right by one index. // Add function contract
+// should have shifted right by one index.
 void insertInOrder_end() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'b', 'c'}; // Incorrect indentation
+    char characters[3] = {'a', 'b', 'c'};
     CharArrayList list(characters, 3);
     // Insert an element meant for the end
     list.insertInOrder('d');
@@ -690,7 +689,7 @@ void insertInOrder_end() {
 // Tests ordered insertion on a emtpy AL.
 // Attempts to insert an element in order in an empty AL.
 // Afterwards, the size of the AL should be one, and the AL should be the
-// character we inserted. // Add function contract
+// character we inserted.
 void insertInOrder_empty() {
     // Initialize an emtpy list
     CharArrayList list;
@@ -702,15 +701,15 @@ void insertInOrder_empty() {
 }
 
 // Tests popFromFront many many times
-// Afterwards the AL should have the proper number of elements // Add function contract
+// Afterwards the AL should have the proper number of elements
 void popFromFront_repeated() {
     CharArrayList list;
     // Push 100 elements
-    for (int i = 0; i < 100; i++) { // No single line loops or if statements.
+    for (int i = 0; i < 100; i++) {
         list.pushAtBack('a');
     }
     // Pop 100 elements
-    for (int i = 0; i < 100; i++) { // No single line loops or if statements.
+    for (int i = 0; i < 100; i++) {
         list.popFromFront();
     }
     // Check for emptiness
@@ -719,29 +718,29 @@ void popFromFront_repeated() {
 
 
 // Tests popFromFront on an AL with many elements
-// Afterwards, the size should be one less than it was to begin with // Add function contract
+// Afterwards, the size should be one less than it was to begin with
 void popFromFront_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
     // Pop the first one
     list.popFromFront();
-    assert(list.size() == 2); // Check for decremented size // No single line loops or if statements.
+    assert(list.size() == 2); // Check for decremented size
 }
 
 // Tests popFromFront on an AL with one element
-// Afterwards, the size should be 0 // Add function contract
+// Afterwards, the size should be 0
 void popFromFront_one() {
     // Initialize a list with 1 element
     CharArrayList list('a');
     // Pop the first element
     list.popFromFront();
-    assert(list.size() == 0); // Check for proper size // No single line loops or if statements.
+    assert(list.size() == 0); // Check for proper size
 }
 
 // Tests popFromFront on an empty AL
 // Attempts to remove the last element of an empty AL
-// This should result in an runtime_error being raised // Add function contract
+// This should result in an runtime_error being raised
 void popFromFront_empty() {
     bool runtime_error_thrown = false; // To track whether an error is thrown
     string error_message; // To track the resultng message
@@ -750,7 +749,7 @@ void popFromFront_empty() {
     try {
         // Attempt to pop from the front
         list.popFromFront();
-    } // Add function contract
+    }
     catch (const runtime_error &e) {
         // if popFromFront is correctly implemented, a runtime_error will be
         // thrown, and we will end up here
@@ -764,15 +763,15 @@ void popFromFront_empty() {
 }
 
 // Tests removeAt many many times
-// Afterwards the AL should have the proper number of elements // Add function contract
+// Afterwards the AL should have the proper number of elements
 void removeAt_repeated() {
     CharArrayList list;
     // Push 100 elements
-    for (int i = 0; i < 100; i++) { // No single line loops or if statements.
+    for (int i = 0; i < 100; i++) {
         list.pushAtBack('a');
     }
     // Pop 100 elements
-    for (int i = 0; i < 50; i++) { // No single line loops or if statements.
+    for (int i = 0; i < 50; i++) {
         list.removeAt(1);
     }
     // Check for emptiness
@@ -782,10 +781,10 @@ void removeAt_repeated() {
 // Tests removeAt on an AL with many elements
 // Attempts to remove the first element
 // Afterwards, the size should have decremented and all the elements should have
-// shifted leftwards // Add function contract
+// shifted leftwards
 void removeAt_front() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
     // Remove the first one
     list.removeAt(0);
@@ -798,10 +797,10 @@ void removeAt_front() {
 // Tests removeAt on an AL with many elements
 // Attempts to remove a middle element
 // Afterwards, the size should have decremented and all the elements to the
-// right of the removed one should have shifted leftwards // Add function contract
+// right of the removed one should have shifted leftwards
 void removeAt_mid() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
     // Remove a middle one
     list.removeAt(1);
@@ -814,10 +813,10 @@ void removeAt_mid() {
 // Tests removeAt on an AL with many elements
 // Attempts to remove the last element
 // Afterwards, the size should have decremented and other the elements should
-// remain unchanged // Add function contract
+// remain unchanged
 void removeAt_end() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
     // Remove the last one
     list.removeAt(2);
@@ -829,10 +828,10 @@ void removeAt_end() {
 
 // Tests removeAt on an AL with many elements
 // Attempts to remove at an index that is out of bounds
-// This should throw a range error with the appropriate message // Add function contract
+// This should throw a range error with the appropriate message
 void removeAt_out_of_bounds() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list(characters, 3);
 
     bool range_error_thrown = false; // To store whether an error is thrown
@@ -841,7 +840,7 @@ void removeAt_out_of_bounds() {
     try {
         // Remove an out of bounds element
         list.removeAt(4);
-    } // Add function contract
+    }
     catch (const range_error &e) {
         // Catch a range error and read the message
         error_message = e.what();
@@ -854,7 +853,7 @@ void removeAt_out_of_bounds() {
 
 // Tests removeAt on an empty AL
 // Attempts to remove an element from an emtpy Al
-// This should result in a range error with the appropriate message being thrown // Add function contract
+// This should result in a range error with the appropriate message being thrown
 void removeAt_empty() {
 
     // Initialize an empty list
@@ -865,7 +864,7 @@ void removeAt_empty() {
     try {
         // Remove an element
         list.removeAt(0);
-    } // Add function contract
+    }
     catch (const range_error &e) {
         // Read the message
         range_error_thrown = true;
@@ -878,14 +877,14 @@ void removeAt_empty() {
 
 // Tests concatenate many many times
 // Concatenates one list to another 10 times
-// Afterwards, the list should be 10 times the length // Add function contract
+// Afterwards, the list should be 10 times the length
 void concatenate_repeated() {
     // Initialize one list with many elements and one empty one
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list1(characters, 3);
     CharArrayList list;
     // Concatenate 10 times
-    for (int i = 0; i < 10; i++) { // No single line loops or if statements.
+    for (int i = 0; i < 10; i++) {
         list.concatenate(&list1);
     } 
     // Check for proper length
@@ -895,10 +894,10 @@ void concatenate_repeated() {
 // Tests concatenate on two ALs with many elements
 // Attempts to add an AL with many elements onto another with many elements
 // Afterwards, the size should be the sum of the sizes and the elements of the
-// second AL should have been added onto the end of the first one // Add function contract
+// second AL should have been added onto the end of the first one
 void concatenate_many_on_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list1(characters, 3);
     // Copy it
     CharArrayList list2(list1);
@@ -913,10 +912,10 @@ void concatenate_many_on_many() {
 
 // Tests concatenate on an AL with many elements and an empty AL
 // Attempts to add an empty AL to an AL with many elements
-// Afterwards, the size and the elements should be the same. // Add function contract
+// Afterwards, the size and the elements should be the same.
 void concatenate_empty_on_many() {
     // Initialize one list with many elements and one empty
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list1(characters, 3);
     CharArrayList list2;
     // Concatenate the empty one to the one with many
@@ -930,10 +929,10 @@ void concatenate_empty_on_many() {
 
 // Tests concatenate on an empty AL and one with many elements
 // Attempts to add an AL with many elements to an emtpy one.
-// Afterwards, the size and the elements should be the same. // Add function contract
+// Afterwards, the size and the elements should be the same.
 void concatenate_many_on_empty() {
     // Initialize one list with many elements and one empty
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list1(characters, 3);
     CharArrayList list2;
     // Concatenate the one with many elements on the empty one
@@ -947,7 +946,7 @@ void concatenate_many_on_empty() {
 
 // Tests concatenate on two empty ALs
 // Attempts to add an empty AL to another emtpy one.
-// Afterwards, the size should be 0. // Add function contract
+// Afterwards, the size should be 0.
 void concatenate_emtpy_on_empty() {
     // Intialize two empty lists
     CharArrayList list1;
@@ -960,10 +959,10 @@ void concatenate_emtpy_on_empty() {
 
 // Tests clear on an AL with many elements.
 // Attempts to clear a full AL
-// Afterwards, the size should be 0 // Add function contract
+// Afterwards, the size should be 0
 void clear_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list1(characters, 3);
     // Clear it
     list1.clear();
@@ -973,7 +972,7 @@ void clear_many() {
 
 // Tests clear on an AL with no elements.
 // Attempts to clear an empty AL
-// Afterwards, the size should be 0 // Add function contract
+// Afterwards, the size should be 0
 void clear_empty() {
     // Initialize an empty list
     CharArrayList list1;
@@ -983,10 +982,10 @@ void clear_empty() {
     assert(list1.size() == 0);
 }
 
-// Tests first on an AL with many elements // Add function contract
+// Tests first on an AL with many elements
 void first_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list1(characters, 3);
     // Check for the proper first element
     assert(list1.first() == 'a');
@@ -995,7 +994,7 @@ void first_many() {
 // Tests first on an emtpy AL
 // Attempts to retrieve the first element of an emtpy AL
 // This should result in a runtime error with the appropriate message being
-// thrown. // Add function contract
+// thrown.
 void first_empty() {
     // Initialize an empty list
     CharArrayList list;
@@ -1005,7 +1004,7 @@ void first_empty() {
     try {
         // Get the first element
         list.first();
-    } // Add function contract
+    }
     catch (const runtime_error &e) {
         // Detect the error and its message
         runtime_error_thrown = true;
@@ -1016,10 +1015,10 @@ void first_empty() {
     assert(error_message == "cannot get first of empty ArrayList");
 }
 
-// Tests last on an AL with many elements // Add function contract
+// Tests last on an AL with many elements
 void last_many() {
     // Initialize a list with many elements
-    char characters[3] = {'a', 'n', 'd'}; // Incorrect indentation
+    char characters[3] = {'a', 'n', 'd'};
     CharArrayList list1(characters, 3);
     // Check for expected last element
     assert(list1.last() == 'd');
@@ -1028,7 +1027,7 @@ void last_many() {
 // Tests last on an emtpy AL
 // Attempts to retrieve the last element of an emtpy AL
 // This should result in a runtime error with the appropriate message being
-// thrown. // Add function contract
+// thrown.
 void last_empty() {
     // Initialize an emtpy list
     CharArrayList list;
@@ -1039,7 +1038,7 @@ void last_empty() {
     try {
         // Access the last element
         list.last();
-    } // Add function contract
+    }
     catch (const runtime_error &e) {
         // Detect error and message
         runtime_error_thrown = true;

@@ -31,6 +31,7 @@ void StyleChecker::oncePerFile() {
     // these variables are for standard namespace 
     bool have_namespace = false; 
     bool have_main = false; 
+    bool is_unit_test = false;
     int namespaceLineNum; 
 
     // these variables are for members declared private 
@@ -52,6 +53,7 @@ void StyleChecker::oncePerFile() {
             namespaceLineNum = i + 1;
         }
         if (lines.at(i).find("int main") != std::string::npos) have_main = true;
+        if (lines.at(i).find("unit_test.h") != std::string::npos) is_unit_test = true;
 
         //check for globals..we cant really test this yet
         for(int j = 0; j < lines.at(i).length(); j++){
@@ -86,7 +88,7 @@ void StyleChecker::oncePerFile() {
     }
     // check for standard namespace pt 2
     if (have_namespace) {
-        if (!have_main) lines[namespaceLineNum] += " // Shouldn't have std namespace";
+        if (!have_main && !is_unit_test) lines[namespaceLineNum] += " // Shouldn't have std namespace";
     }
 }
 
@@ -98,14 +100,17 @@ static bool hasFileHeader(const std::vector<std::string>& lines) {
 
     for (size_t i = 0; i < maxScan; ++i) {
         const std::string& line = lines[i];
+        
         if (line.find("/*") != std::string::npos) inBlock = true;
-        if (inBlock && (line.find(".cpp") != std::string::npos || inBlock && line.find(".h") != std::string::npos)) sawFileTag = true;
+        
+        //if (inBlock) sawFileTag = true;
+        //&& (line.find(".cpp") != std::string::npos
+        //&& line.find(".h") != std::string::npos
         if (line.find("*/") != std::string::npos && inBlock) {
-            return sawFileTag;
+            return true;
         }
-        if (line.find("//") != std::string::npos &&
-           (line.find(".cpp") != std::string::npos || 
-            line.find(".h") != std::string::npos)) return true;
+        if (line.find("//") != std::string::npos ) return true;
+        //&& (line.find(".cpp") != std::string::npos || line.find(".h") != std::string::npos)
     
     }
     return false;
@@ -118,7 +123,6 @@ void StyleChecker::parseFunctions() {
     for (int i = 0; i < num_lines; i++) {
         std::string curr_line = lines[i];
         if (isFunctionStart(curr_line)) {
-            std::cout << "function found on line " << i+1 << std::endl;
             func_start = i;
             func_end = findFunctionEnd(func_start);
             if (func_end != -1) {
@@ -138,7 +142,7 @@ bool StyleChecker::isFunctionStart(const std::string& line) {
     // template functions, const, static, virtual, etc.
     std::regex funcPattern(
         "^\\s*" // disregards leading whitespace
-        "(?!\\s*(?:for|if|else|while|switch|return)\\b)"
+        "(?!\\s*(?:for|if|else|while|switch|return|try|catch)\\b)"
         "(?:(?:inline|static|virtual|explicit|constexpr|const|friend|extern)\\s+)*" // matches these expressions
         "(?:[\\w\\s*&:<>,]+?\\s+)?"   // return type is optional for constructors
         "([\\w:~]+)\\s*" // Matches scope resolution operator and destructor
@@ -183,16 +187,8 @@ void StyleChecker::checkFuncLength(int max_len) {
             lines[func.start] += ss.str();
         }
 
-        int currLine = func.start - 1;
-        bool purposeExists = false;
-        while (currLine >= 0 && (lines[currLine].find("//") != std::string::npos || lines[currLine].find("*") != std::string::npos)) {
-            if (lines[currLine].find("purpose:") != std::string::npos || lines[currLine].find("Purpose:") != std::string::npos){
-                purposeExists = true;
-                break;
-            }
-            currLine--;
-        }
-        if (!purposeExists) lines[func.start-1] += " // Add function contract";
+        if (lines[func.start - 1].find("//") == std::string::npos && lines[func.start - 1].find("*") == std::string::npos)
+            lines[func.start-1] += " // Add function contract";
     }
 }
 
@@ -345,7 +341,7 @@ void StyleChecker::indentation(int i, int *level) {
 void StyleChecker::singleLineLoop(int i) {
 // no single line loops
     if(lines.at(i).find("for") != std::string::npos || lines.at(i).find("while") != std::string::npos || lines.at(i).find("if (") != std::string::npos){
-        if(lines.at(i).find(";") != std::string::npos){
+        if(lines.at(i)[lines.at(i).size()-1] == ';' || lines.at(i)[lines.at(i).size()-2] == ';'){
             std::string comment = " // No single line loops or if statements.";
             lines[i] += comment;
         }
@@ -353,7 +349,6 @@ void StyleChecker::singleLineLoop(int i) {
 }
 
 void StyleChecker::lineLength(int i, int original_length) {
-    // std::cout << "LINE LENGTH CALLED FOR LINE " << i << std::endl;
     if(original_length > 80) {
         std::string comment = " // Exceeds 80-char line limit (length: " + std::to_string(original_length) + " )";
         lines[i] += comment;

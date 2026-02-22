@@ -1,8 +1,6 @@
-//cs15 
-//imp of roster
-//name or wgatever
-//evil
-/*vhbcnmxhf
+
+/*
+unit_test
 bnvfcdhjf
 nvjfmckd,njf*/
 
@@ -240,4 +238,13 @@ void indentation_edge_cases(){
 
     // what if it's a curly brace in a string 
     std::cout << "Train or PassengerQueue or whatever { stuff here }";
+}
+
+for (int i = 0; i < sth; i++) shouldn't work;
+for (int i = 0; i < sth; i++) shouldn't work; 
+for (int i = 0; i < sth; i++) 
+    should work;
+
+void check_function(){
+    assert(test_list.size() == 10);
 }

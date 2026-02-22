@@ -1,8 +1,6 @@
-//cs15  // Where is your file header? (filename, author, date, file purpose)
-//imp of roster
-//name or wgatever
-//evil
-/*vhbcnmxhf
+
+/*
+unit_test
 bnvfcdhjf
 nvjfmckd,njf*/
 
@@ -160,7 +158,7 @@ void indent_check(){
 void and_or_not_check(){
     for (this || can't && pass TWICE)  // Use "or" instead of "||" 
         I ate too many oreos;
-    if (!I don't think this should pass) double fail should happen here; // Use "not" instead of "!"  // No single line loops or if statements.
+    if (!I don't think this should pass) double fail should happen here; // Use "not" instead of "!" 
     else if (not fail) 
         please pass; 
     while (!pass)  // Use "not" instead of "!" 
@@ -213,7 +211,7 @@ void edge_case_for_functions(){
     std::cout << "what if I have curly braces { here }"; // Incorrect indentation
 }
 
-
+// if
 void indentation_edge_cases(){
     // previous line ends with ')' -> current line indentation should be ignored
     if (condition)
@@ -240,4 +238,13 @@ void indentation_edge_cases(){
 
     // what if it's a curly brace in a string 
     std::cout << "Train or PassengerQueue or whatever { stuff here }"; // Incorrect indentation
+}
+
+for (int i = 0; i < sth; i++) shouldn't work; // No single line loops or if statements.
+for (int i = 0; i < sth; i++) shouldn't work;  // No single line loops or if statements.
+for (int i = 0; i < sth; i++) 
+    should work;
+ // Add function contract
+void check_function(){
+    assert(test_list.size() == 10);
 }
