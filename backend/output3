@@ -12,7 +12,7 @@ nvjfmckd,njf*/
 
 using namespace std;
  // Shouldn't have std namespace
-int x = 2; //Not allowed a global variable.
+int x = 2; // Global variable not allowed
 
 static const int INITIAL_CAPACITY = 20;
 
@@ -62,6 +62,10 @@ Roster::Roster() // Exceeds 30-line limit (36 lines)
 
 }
 
+// 
+// purpose:
+// 
+// 
 void spacing_checks(){ // Exceeds 30-line limit (39 lines)
     // this comment shouldn't be read because it's a comment not code, except what if it's past 80 characters?
     // the following few operations shouldn't pass spacing check 
@@ -103,31 +107,46 @@ void spacing_checks(){ // Exceeds 30-line limit (39 lines)
     this                 line              is              over           80          characters // Exceeds 80-char line limit (length: 96 )
 }
 
+
+/* 
+ * purpose:
+ * 
+ */ 
 void single_line_loops_check(){
     // the following shouldn't pass 
     if (condition) do something; // No single line loops or if statements.
     else if (condition) my eyes are tired; // No single line loops or if statements.
 
-    // the following should pass 
+    // the following should pass // Add function contract
     if (condition) 
-        do something;
+        do something;// Add function contract
     if (condition) {
         do something;
-    }
+    }// Add function contract
     if (condition)
     {
         do something;
     } else if (condition) {
-        do something else; 
+        do something else; // Add function contract
+        if(){ // Add a space between the if keyword and '('// Add function contract
+                if(){ // Add a space between the if keyword and '(' // Incorrect indentation
+                         // Incorrect indentation
+                } // Incorrect indentation
+        }
     }
     else {
 
     }
 }
 
+
+/* 
+ * Purpose:
+ * 
+ */ 
 void indent_check(){
  1 space // Incorrect indentation
-        check
+        check// Add function contract
     if (this should pass)
         this should also pass;
   2 spaces  // Incorrect indentation
@@ -136,14 +155,55 @@ void indent_check(){
     this shouldn't pass index because index should be 0 outside the function  // Incorrect indentation
 
 // the following line is just 5 spaces and it shouldn't pass index 
-      // Incorrect indentation
-void and_or_not_check(){
+     // Incorrect indentation
+// Add function contract
+void and_or_not_check(){// Add function contract
     for (this || can't && pass TWICE)  // Use "or" instead of "||" 
         I ate too many oreos;
-    if (!I don't think this should pass) double fail should happen here; // Use "not" instead of "!"  // No single line loops or if statements.
+    if (!I don't think this should pass) double fail should happen here; // Use "not" instead of "!"  // No single line loops or if statements.// Add function contract
     else if (not fail) 
-        please pass; 
+        please pass; // Add function contract
     while (!pass)  // Use "not" instead of "!" 
         this should fail;
     function_call_that_should_work(&reference); 
+}
+// Add function contract
+void 30_line_check(){ // Exceeds 30-line limit (38 lines)// Add function contract
+    if (a very very long if statement that could be mistaken for a function) { // Exceeds 30-line limit (36 lines)
+        a 
+        very 
+        very 
+        very 
+        very 
+        very 
+        very 
+        very 
+        very
+        very 
+        very
+        very 
+        very 
+        very 
+        very 
+        very
+        very 
+        very 
+        very 
+        very 
+        very
+        very 
+        very 
+        very 
+        very 
+        very
+        very 
+        very 
+        very 
+        very 
+        very
+        very
+        very
+        long 
+        if 
+    }
 }

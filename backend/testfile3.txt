@@ -62,6 +62,10 @@ Roster::Roster()
 
 }
 
+// 
+// purpose:
+// 
+// 
 void spacing_checks(){
     // this comment shouldn't be read because it's a comment not code, except what if it's past 80 characters?
     // the following few operations shouldn't pass spacing check 
@@ -103,6 +107,11 @@ void spacing_checks(){
     this                 line              is              over           80          characters
 }
 
+
+/* 
+ * purpose:
+ * 
+ */ 
 void single_line_loops_check(){
     // the following shouldn't pass 
     if (condition) do something;
@@ -130,6 +139,11 @@ void single_line_loops_check(){
     }
 }
 
+
+/* 
+ * Purpose:
+ * 
+ */ 
 void indent_check(){
  1 space
         check
@@ -141,7 +155,8 @@ void indent_check(){
     this shouldn't pass index because index should be 0 outside the function 
 
 // the following line is just 5 spaces and it shouldn't pass index 
-     
+    
+
 void and_or_not_check(){
     for (this || can't && pass TWICE) 
         I ate too many oreos;
@@ -151,4 +166,48 @@ void and_or_not_check(){
     while (!pass) 
         this should fail;
     function_call_that_should_work(&reference); 
+}
+
+void 30_line_check(){
+    if (a very very long if statement that could be mistaken for a function) {
+        a 
+        very 
+        very 
+        very 
+        very 
+        very 
+        very 
+        very 
+        very
+        very 
+        very
+        very 
+        very 
+        very 
+        very 
+        very
+        very 
+        very 
+        very 
+        very 
+        very
+        very 
+        very 
+        very 
+        very 
+        very
+        very 
+        very 
+        very 
+        very 
+        very
+        very
+        very
+        long 
+        if 
+    }
+}
+
+void edge_case_for_functions(){
+    std::cout << "what if I have curly braces { here }"
 }

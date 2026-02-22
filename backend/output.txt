@@ -78,8 +78,7 @@ int PassengerQueue::size() {
  * effects:   none
  * other:     none
  */
-// Exceeds 30 line limit (35 lines)
-void PassengerQueue::print(std::ostream &output) { // Use "and" instead of "&&" 
+void PassengerQueue::print(std::ostream &output) { // Use "and" instead of "&&" // Exceeds 30 line limit (35 lines)
 
 
 

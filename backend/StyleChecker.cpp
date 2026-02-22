@@ -176,13 +176,33 @@ void StyleChecker::checkFuncLength(int max_len) {
         if ((func.end - func.start) > max_len) {
             func.too_long = true;
             int length = func.end - func.start;
-            
-            // TEMPORARY change for now, can change back later
-            /*std::stringstream ss;
-            ss << "// Exceeds " << max_len << " 30-line limit (" << length << " lines)";
-            lines.insert(lines.begin() + func.start, ss.str());*/
-            lines[func.start] += " // Exceeds 30-line limit (" + std::to_string(length) + " lines)";
+            std::stringstream ss;
+            ss << " // Exceeds " << max_len << "-line limit (" << length << " lines)";
+            lines[func.start] += ss.str();
         }
+
+        // check function contract 
+        int currLine = func.start - 1;
+        bool purposeExists = false;
+        while (currLine >= 0 && lines[currLine].find("//") != std::string::npos || lines[currLine].find("*") != std::string::npos) {
+            if (lines[currLine].find("purpose:") != std::string::npos || lines[currLine].find("Purpose:") != std::string::npos){
+                purposeExists = true;
+                break;
+            }
+            currLine--;
+        }
+        if (!purposeExists) lines[func.start-1] += " // Add function contract";
+    }
+}
+
+void StyleChecker::oncePerFunction(){
+    // if this is not .cpp file, SKIP WHOLE FUNCTIO
+    for (int i = 0; i < lines.size(); i++) {
+        // check for braces 
+        if (lines[i]find("{"))
+        // then check if it's if for while 
+
+        // if not, function found!! 
     }
 }
 
@@ -282,7 +302,6 @@ void StyleChecker::operatorSpacing(int i) {
     }
 }
 
-
 void StyleChecker::indentation(int i, int *level) {
     // indentation 
     int leading_spaces = 0;
@@ -337,6 +356,8 @@ void StyleChecker::whileBoolean(int i) {
         lines[i] += error;
     }
 }
+
+
 
 void StyleChecker::run() {
     
