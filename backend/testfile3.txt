@@ -8,7 +8,7 @@ nvjfmckd,njf*/
 #include <iostream>
 #include "Student.h"
 
-using namespace std;
+
 
 int x = 2;
 
@@ -22,43 +22,7 @@ static const int INITIAL_CAPACITY = 20;
  * Effects:     Initizalizes an instance of Roster with capacity 
  *              INITIAL_CAPACITY
  */
-Roster::Roster()
-{
-        list     = new Student[INITIAL_CAPACITY];
-        capacity = INITIAL_CAPACITY;
-        size     = 0;
 
-
-
-        
-
-
-
-        This 
-
-
-        Function
-
-
-        Should 
-
-
-        Exceed 
-
-
-        The 
-
-
-        Thirty
-
-
-        Line 
-
-
-        Length 
-
-
-}
 
 // 
 // purpose:
