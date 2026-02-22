@@ -8,6 +8,7 @@
     "dev:win": "set \"PATH=%LOCALAPPDATA%\\Microsoft\\WinGet\\Packages\\BrechtSanders.WinLibs.POSIX.UCRT.LLVM_Microsoft.Winget.Source_8wekyb3d8bbwe\\mingw64\\bin;%PATH%\" && tsx server.ts",
     "start": "NODE_ENV=production tsx server.ts",
     "build:backend": "g++ -std=c++11 ../backend/main.cpp ../backend/StyleChecker.cpp -o ../backend/checker",
+    "build:render": "npm run build:backend && vite build",
     "build:all": "npm run build:backend && npm run build",
     "build": "vite build",
     "preview": "vite preview",

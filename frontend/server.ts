@@ -4,8 +4,11 @@ import { createServer as createViteServer } from 'vite';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { execFile } from 'child_process';
+import { promisify } from 'util';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const execFileAsync = promisify(execFile);
 
 async function startServer() {
   const app = express();
@@ -45,34 +48,36 @@ async function startServer() {
 
       const filePath = req.file.path;
       const originalName = req.file.originalname;
+      const reportPath = path.join(uploadDir, `${path.basename(originalName)}.${Date.now()}.report.txt`);
+      const checkerPath = process.env.CHECKER_PATH || path.join(__dirname, '..', 'backend', 'checker');
 
       try {
-        console.log(`Processing file: ${originalName} at ${filePath}`);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        let report = '';
-        if (originalName.endsWith('.cpp') || originalName.endsWith('.h')) {
-          report = `STYLE CHECK REPORT FOR: ${originalName}\n`;
-          report += `----------------------------------------\n`;
-          report += `[ERROR] Line 12: Function name 'my_function' should be camelCase 'myFunction'.\n`;
-          report += `[WARNING] Line 45: Line length exceeds 80 characters (85 chars).\n`;
-          report += `[ERROR] Line 88: Missing function contract for 'calculateTotal'.\n`;
-          report += `[INFO] Line 102: Good use of constants.\n`;
-          report += `\nTotal Errors: 2\nTotal Warnings: 1\n`;
-        } else {
-          report = `STYLE CHECK REPORT FOR: ${originalName}\n`;
-          report += `----------------------------------------\n`;
-          report += `[INFO] File type not strictly checked by mock engine, but here is a sample output.\n`;
-          report += `[WARNING] Line 1: Header comment missing.\n`;
+        if (!fs.existsSync(checkerPath)) {
+          return res.status(500).json({
+            error: 'Style checker binary not found. Build backend/checker or set CHECKER_PATH.',
+          });
         }
+
+        console.log(`Running checker for ${originalName}`);
+        const { stderr } = await execFileAsync(checkerPath, [filePath, reportPath]);
+        if (stderr && stderr.trim().length > 0) {
+          console.error('Checker stderr:', stderr);
+        }
+
+        const report = await fs.promises.readFile(reportPath, 'utf8');
 
         fs.unlink(filePath, (err) => {
           if (err) console.error('Error deleting temp file:', err);
+        });
+        fs.unlink(reportPath, (err) => {
+          if (err) console.error('Error deleting report file:', err);
         });
 
         res.json({ report });
       } catch (error) {
         console.error('Processing error:', error);
+        fs.unlink(filePath, () => {});
+        fs.unlink(reportPath, () => {});
         res.status(500).json({ error: 'Failed to process file' });
       }
     }
